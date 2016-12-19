@@ -7,13 +7,13 @@ const router = express.Router();
 const users = require('./users');
 const leaderboard = require('./leaderboard');
 const payments = require('./payments');
-const sessions = require('./sessions');
+const login = require('./login');
 
 
 router.use('/users', users);
 router.use('/leaderboard', leaderboard);
 router.use('/payments', payments);
-router.use('/sessions', sessions);
+router.use('/login', login);
 
 router.use(function (req, res) {
   res.status(404).end();

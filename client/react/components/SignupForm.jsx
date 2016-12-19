@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-    // const username = props.username;
-    // const password = props.password;
-    // const handleChange = props.handleChange;
-    // const createUser = props.createUser;
-    // const confirmPassword = props.confirmPassword;
 
 const SignupForm = (props) => (
 

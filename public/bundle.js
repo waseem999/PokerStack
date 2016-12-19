@@ -73,19 +73,19 @@
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
-	var _LoginForm = __webpack_require__(/*! ./components/LoginForm */ 304);
+	var _LoginClass = __webpack_require__(/*! ./components/LoginClass */ 304);
 	
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+	var _LoginClass2 = _interopRequireDefault(_LoginClass);
 	
-	var _GameContainer = __webpack_require__(/*! ./containers/GameContainer */ 305);
+	var _GameContainer = __webpack_require__(/*! ./containers/GameContainer */ 306);
 	
 	var _GameContainer2 = _interopRequireDefault(_GameContainer);
 	
-	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 307);
+	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 308);
 	
 	var _LeaderboardContainer2 = _interopRequireDefault(_LeaderboardContainer);
 	
-	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 310);
+	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 311);
 	
 	var _PaymentContainer2 = _interopRequireDefault(_PaymentContainer);
 	
@@ -109,7 +109,7 @@
 	      { path: '/', component: _App2.default },
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _SignupClass2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginForm2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/leaderboard', component: _LeaderboardContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/game', component: _GameContainer2.default })
@@ -27267,7 +27267,6 @@
 	    value: function createUser(e) {
 	      var username = this.state.username;
 	      var password = this.state.password;
-	      console.log("USERNAME??", username);
 	
 	      e.preventDefault();
 	      _axios2.default.post('/api/users', {
@@ -31680,12 +31679,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// const username = props.username;
-	// const password = props.password;
-	// const handleChange = props.handleChange;
-	// const createUser = props.createUser;
-	// const confirmPassword = props.confirmPassword;
-	
 	var SignupForm = function SignupForm(props) {
 	  return _react2.default.createElement(
 	    'div',
@@ -31928,9 +31921,9 @@
 
 /***/ },
 /* 304 */
-/*!**********************************************!*\
-  !*** ./client/react/components/LoginForm.js ***!
-  \**********************************************/
+/*!***********************************************!*\
+  !*** ./client/react/components/LoginClass.js ***!
+  \***********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31949,6 +31942,16 @@
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
+	var _store = __webpack_require__(/*! ../store */ 261);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
+	
+	var _LoginForm = __webpack_require__(/*! ./LoginForm */ 305);
+	
+	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -31959,41 +31962,46 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Login = function (_Component) {
-	  _inherits(Login, _Component);
+	var _class = function (_Component) {
+	  _inherits(_class, _Component);
 	
-	  function Login(props) {
-	    _classCallCheck(this, Login);
+	  function _class(props) {
+	    _classCallCheck(this, _class);
 	
-	    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 	
 	    _this.state = {
 	      username: '',
 	      password: ''
 	    };
 	
-	    _this.handleLogin = _this.handleLogin.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleLogin = _this.handleLogin.bind(_this);
 	    return _this;
 	  }
 	
-	  _createClass(Login, [{
-	    key: 'handleChange',
-	    value: function handleChange(e) {
-	      this.setState(_defineProperty({}, e.target.type, e.target.value));
-	    }
-	  }, {
+	  _createClass(_class, [{
 	    key: 'handleLogin',
 	    value: function handleLogin(e) {
+	      var username = this.state.username;
+	      var password = this.state.password;
 	      e.preventDefault();
-	      _axios2.default.post('/api/sessions', {
-	        username: this.state.username,
-	        password: this.state.password
-	      });
+	      _axios2.default.post('/api/login', {
+	        username: username,
+	        password: password
+	      }).then(function () {});
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      this.setState(_defineProperty({}, e.target.id, e.target.value));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var username = this.state.username;
+	      var password = this.state.password;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
@@ -32001,27 +32009,27 @@
 	          'div',
 	          { className: 'col-md-4 col-md-offset-4' },
 	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Login'
+	          ),
+	          _react2.default.createElement(
 	            'form',
 	            { onSubmit: this.handleLogin },
-	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              'Login'
-	            ),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'form-group' },
 	              _react2.default.createElement(
 	                'label',
-	                { htmlFor: 'exampleInputusername1' },
-	                'username address'
+	                { htmlFor: 'username' },
+	                'username'
 	              ),
 	              _react2.default.createElement('input', {
 	                onChange: this.handleChange,
 	                value: this.state.username,
-	                type: 'username',
+	                type: 'text',
 	                className: 'form-control',
-	                id: 'exampleInputusername1',
+	                id: 'username',
 	                'aria-describedby': 'usernameHelp',
 	                placeholder: 'Enter username' })
 	            ),
@@ -32030,15 +32038,15 @@
 	              { className: 'form-group' },
 	              _react2.default.createElement(
 	                'label',
-	                { htmlFor: 'exampleInputPassword1' },
+	                { htmlFor: 'password' },
 	                'Password'
 	              ),
 	              _react2.default.createElement('input', {
 	                onChange: this.handleChange,
 	                value: this.state.password,
-	                type: 'password',
+	                type: 'text',
 	                className: 'form-control',
-	                id: 'exampleInputPassword1',
+	                id: 'password',
 	                placeholder: 'Password' })
 	            ),
 	            _react2.default.createElement(
@@ -32051,14 +32059,97 @@
 	      );
 	    }
 	  }]);
-	
-	  return Login;
+
+	  return _class;
 	}(_react.Component);
-	
-	exports.default = Login;
+
+	exports.default = _class;
 
 /***/ },
 /* 305 */
+/*!**********************************************!*\
+  !*** ./client/react/components/LoginForm.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LoginForm = function LoginForm(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'row' },
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'col-md-4 col-md-offset-4' },
+	      _react2.default.createElement(
+	        'form',
+	        { onSubmit: props.handleLogin },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Login'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'exampleInputusername1' },
+	            'username address'
+	          ),
+	          _react2.default.createElement('input', {
+	            onChange: props.handleChange,
+	            value: props.username,
+	            type: 'username',
+	            className: 'form-control',
+	            id: 'exampleInputusername1',
+	            'aria-describedby': 'usernameHelp',
+	            placeholder: 'Enter username' })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'exampleInputPassword1' },
+	            'Password'
+	          ),
+	          _react2.default.createElement('input', {
+	            onChange: props.handleChange,
+	            value: props.password,
+	            type: 'password',
+	            className: 'form-control',
+	            id: 'exampleInputPassword1',
+	            placeholder: 'Password' })
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'submit', className: 'btn btn-primary' },
+	          'Login'
+	        )
+	      )
+	    )
+	  );
+	};
+	
+	exports.default = LoginForm;
+
+/***/ },
+/* 306 */
 /*!**************************************************!*\
   !*** ./client/react/containers/GameContainer.js ***!
   \**************************************************/
@@ -32084,7 +32175,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _bets = __webpack_require__(/*! ../action-creators/bets */ 306);
+	var _bets = __webpack_require__(/*! ../action-creators/bets */ 307);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32203,7 +32294,7 @@
 	;
 
 /***/ },
-/* 306 */
+/* 307 */
 /*!**********************************************!*\
   !*** ./client/react/action-creators/bets.js ***!
   \**********************************************/
@@ -32224,7 +32315,7 @@
 	};
 
 /***/ },
-/* 307 */
+/* 308 */
 /*!*********************************************************!*\
   !*** ./client/react/containers/LeaderboardContainer.js ***!
   \*********************************************************/
@@ -32250,11 +32341,11 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 308);
+	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 309);
 	
 	var _Leaderboard2 = _interopRequireDefault(_Leaderboard);
 	
-	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 309);
+	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 310);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32278,7 +32369,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Leaderboard2.default);
 
 /***/ },
-/* 308 */
+/* 309 */
 /*!************************************************!*\
   !*** ./client/react/components/Leaderboard.js ***!
   \************************************************/
@@ -32360,7 +32451,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 309 */
+/* 310 */
 /*!*****************************************************!*\
   !*** ./client/react/action-creators/leaderboard.js ***!
   \*****************************************************/
@@ -32399,7 +32490,7 @@
 	};
 
 /***/ },
-/* 310 */
+/* 311 */
 /*!*****************************************************!*\
   !*** ./client/react/containers/PaymentContainer.js ***!
   \*****************************************************/
@@ -32425,7 +32516,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 311);
+	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 312);
 	
 	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
 	
@@ -32450,7 +32541,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PaymentsClass2.default);
 
 /***/ },
-/* 311 */
+/* 312 */
 /*!**************************************************!*\
   !*** ./client/react/components/PaymentsClass.js ***!
   \**************************************************/
@@ -32478,7 +32569,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 312);
+	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 313);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
@@ -32547,7 +32638,7 @@
 	exports.default = _class;
 
 /***/ },
-/* 312 */
+/* 313 */
 /*!**********************************************!*\
   !*** ./client/react/components/Payments.jsx ***!
   \**********************************************/

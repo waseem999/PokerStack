@@ -14,14 +14,14 @@ export default class extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  createUser(e) {
+  handleLogin(e) {
     let username = this.state.username;
     let password = this.state.password;
-
     e.preventDefault();
-    axios.post('/api/users', {
+    axios.post('/api/login', {
       username: username,
       password: password
     })
@@ -41,13 +41,37 @@ render(){
 
 
     return (
-        <LoginForm  
-        handleChange={this.handleChange}
-        createUser={this.createUser}
-        username={username}
-        password={password}
-    
-        />
+        <div className="row">
+        <div className="col-md-4 col-md-offset-4">
+            <h1>Login</h1>
+          <form onSubmit={this.handleLogin}>
+            <div className="form-group">
+              <label htmlFor="username">username</label>
+              <input 
+                onChange={this.handleChange} 
+                value={this.state.username}
+                type="text"
+                className="form-control"
+                id="username"
+                aria-describedby="usernameHelp"
+                placeholder="Enter username" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                onChange={this.handleChange}
+                value={this.state.password}
+                type="text"
+                className="form-control"
+                id="password"
+                placeholder="Password"/>
+            </div>
+            <button type="submit" className="btn btn-primary">Login</button>
+          </form>
+        </div>
+      </div>
     );
+
+  
     }
 }

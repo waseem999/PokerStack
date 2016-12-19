@@ -16,9 +16,8 @@ router.post('/', (req, res, next) => {
    })
    .then(user => {
        if (!user){
-           var error = new Error("No Valid Username");
-           error.status(401);
-           throw error
+           var error = new Error("No Username Found");
+           throw error;
        }
     req.session.userId = user.id;
     req.session.name = user.username;

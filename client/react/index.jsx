@@ -6,7 +6,7 @@ import style from '../../public/stylesheets/main.scss';
 import App from './components/App.jsx';
 import SignupClass from './components/SignupClass';
 import Home from './components/Home.jsx';
-import Login from './components/LoginForm';
+import LoginClass from './components/LoginClass';
 import Game from './containers/GameContainer';
 //import Payment from './containers/PaymentContainer';
 import Leaderboard from './containers/LeaderboardContainer';
@@ -21,7 +21,7 @@ const rootRouter =
         <Route path="/" component={App} >
           <IndexRoute component={Home} />
           <Route path="/signup" component={SignupClass} />
-          <Route path="/login" component={Login} />
+          <Route path="/login" component={LoginClass} />
           <Route path="/leaderboard" component={Leaderboard} />
           <Route path="/payments" component={Payments} />
           <Route path="/game" component={Game} />

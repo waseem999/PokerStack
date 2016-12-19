@@ -20,7 +20,7 @@ export default class extends Component {
   createUser(e) {
     let username = this.state.username;
     let password = this.state.password;
-    console.log("USERNAME??", username);
+
 
     e.preventDefault();
     axios.post('/api/users', {
