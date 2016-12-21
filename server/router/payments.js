@@ -9,12 +9,12 @@ const User = models.User;
 
 
 router.get('/', (req, res, next) => {
-   Chips.findOne({ 
+   User.findOne({ 
     where: { 
-      userId: req.session.userId
+      username: req.session.userId
     } 
   })
-    .then(chips => res.json(chips))
+    .then(user => res.json(user))
   .catch(next);
 });
 

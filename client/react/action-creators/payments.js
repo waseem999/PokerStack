@@ -4,7 +4,8 @@ import axios from 'axios';
 export const loadChiptotal = chips => {
 return {
     type: LOAD_CHIPTOTAL,
-    chips: chips
+    chips: chips,
+    user: user
     }
 };
 

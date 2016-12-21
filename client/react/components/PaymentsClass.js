@@ -37,6 +37,7 @@ handleChange(e) {
 render(){
     const paymentType = this.state.paymentType;
     const accountNumber = this.state.accountNumber;
+    console.log("PROPS?", this.props)
    
 
     return (

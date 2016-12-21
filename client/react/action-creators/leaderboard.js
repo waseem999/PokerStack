@@ -12,7 +12,6 @@ export const getLeaderboardPlayers = () => {
   return dispatch => {
     axios.get("/api/leaderboard")
       .then(response => {
-        console.log("USERS AFTER AXIOS", response.data)
         dispatch(loadLeadeboard(response.data));
       })
       .catch((error)=> console.error(error));

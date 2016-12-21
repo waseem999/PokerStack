@@ -7,6 +7,7 @@ const path = require('path');
 const index = require('./server/router/index.js');
 const Users = require('./server/db/models/user');
 const Chips = require('./server/db/models/chips');
+const Payments = require('./server/db/models/payments');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,6 +43,7 @@ app.use(function (err, req, res, next){
 });
 Users.sync({})
     .then(()=> Chips.sync({}))
+    .then(()=>Payments.sync({}))
     .then(function () {
         app.listen(3001, function () {
             console.log('Server is listening on port 3001!');

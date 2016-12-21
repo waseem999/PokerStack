@@ -30,7 +30,7 @@ return (
                 placeholder="accountNumber" />
             </div>
             <button type="submit" className="btn btn-primary" 
-            onClick={ () => {location.href = '/login'}}>Create Account</button>
+            onClick={ () => {location.href = '/'}}>Create Account</button>
           </form>
         </div>
       </div>

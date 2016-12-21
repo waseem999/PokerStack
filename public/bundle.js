@@ -85,9 +85,9 @@
 	
 	var _LeaderboardContainer2 = _interopRequireDefault(_LeaderboardContainer);
 	
-	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 311);
+	var _PaymentsClass = __webpack_require__(/*! ./components/PaymentsClass */ 311);
 	
-	var _PaymentContainer2 = _interopRequireDefault(_PaymentContainer);
+	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
@@ -111,7 +111,7 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _SignupClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/leaderboard', component: _LeaderboardContainer2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentContainer2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentsClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/game', component: _GameContainer2.default })
 	    )
 	  )
@@ -31009,7 +31009,7 @@
   \**************************************************/
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -31019,7 +31019,8 @@
 	var LOAD_CHIPTOTAL = 'LOAD_CHIPTOTAL';
 	
 	var initialState = {
-	  chips: 0
+	  chips: 0,
+	  user: ""
 	};
 	
 	function chipReducer() {
@@ -31028,7 +31029,7 @@
 	
 	  switch (action.type) {
 	    case LOAD_CHIPTOTAL:
-	      return Object.assign({}, state, { chips: action.chips });
+	      return Object.assign({}, state, { chips: action.chips, user: action.user });
 	    default:
 	      return state;
 	  }
@@ -32051,7 +32052,10 @@
 	            ),
 	            _react2.default.createElement(
 	              'button',
-	              { type: 'submit', className: 'btn btn-primary' },
+	              { type: 'submit', className: 'btn btn-primary',
+	                onClick: function onClick() {
+	                  location.href = '/payments';
+	                } },
 	              'Login'
 	            )
 	          )
@@ -32138,7 +32142,10 @@
 	        ),
 	        _react2.default.createElement(
 	          'button',
-	          { type: 'submit', className: 'btn btn-primary' },
+	          { type: 'submit', className: 'btn btn-primary',
+	            onClick: function onClick() {
+	              location.href = '/payments';
+	            } },
 	          'Login'
 	        )
 	      )
@@ -32481,7 +32488,6 @@
 	var getLeaderboardPlayers = exports.getLeaderboardPlayers = function getLeaderboardPlayers() {
 	  return function (dispatch) {
 	    _axios2.default.get("/api/leaderboard").then(function (response) {
-	      console.log("USERS AFTER AXIOS", response.data);
 	      dispatch(loadLeadeboard(response.data));
 	    }).catch(function (error) {
 	      return console.error(error);
@@ -32491,57 +32497,6 @@
 
 /***/ },
 /* 311 */
-/*!*****************************************************!*\
-  !*** ./client/react/containers/PaymentContainer.js ***!
-  \*****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _axios = __webpack_require__(/*! axios */ 236);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
-	var _store = __webpack_require__(/*! ../store */ 261);
-	
-	var _store2 = _interopRequireDefault(_store);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
-	
-	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 312);
-	
-	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function mapStateToProps(state) {
-	  var chips = state.payments.chips;
-	  console.log("STATE?", state);
-	  return {
-	    chips: chips
-	  };
-	}
-	
-	function mapDispatchToProps(dispatch) {
-	  return {
-	    ChipTotalFunction: function ChipTotalFunction() {
-	      dispatch(getChipTotal());
-	    }
-	  };
-	}
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PaymentsClass2.default);
-
-/***/ },
-/* 312 */
 /*!**************************************************!*\
   !*** ./client/react/components/PaymentsClass.js ***!
   \**************************************************/
@@ -32569,7 +32524,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 313);
+	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 312);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
@@ -32622,6 +32577,7 @@
 	    value: function render() {
 	      var paymentType = this.state.paymentType;
 	      var accountNumber = this.state.accountNumber;
+	      console.log("PROPS?", this.props);
 	
 	      return _react2.default.createElement(_Payments2.default, {
 	        handleChange: this.handleChange,
@@ -32638,7 +32594,7 @@
 	exports.default = _class;
 
 /***/ },
-/* 313 */
+/* 312 */
 /*!**********************************************!*\
   !*** ./client/react/components/Payments.jsx ***!
   \**********************************************/
@@ -32703,7 +32659,7 @@
 	          'button',
 	          { type: 'submit', className: 'btn btn-primary',
 	            onClick: function onClick() {
-	              location.href = '/login';
+	              location.href = '/';
 	            } },
 	          'Create Account'
 	        )

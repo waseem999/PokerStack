@@ -10,7 +10,7 @@ import LoginClass from './components/LoginClass';
 import Game from './containers/GameContainer';
 //import Payment from './containers/PaymentContainer';
 import Leaderboard from './containers/LeaderboardContainer';
-import Payments from './containers/PaymentContainer';
+import PaymentsClass from './components/PaymentsClass';
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -23,7 +23,7 @@ const rootRouter =
           <Route path="/signup" component={SignupClass} />
           <Route path="/login" component={LoginClass} />
           <Route path="/leaderboard" component={Leaderboard} />
-          <Route path="/payments" component={Payments} />
+          <Route path="/payments" component={PaymentsClass} />
           <Route path="/game" component={Game} />
         </Route>
       </Router>

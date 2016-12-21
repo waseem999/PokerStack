@@ -66,7 +66,8 @@ render(){
                 id="password"
                 placeholder="Password"/>
             </div>
-            <button type="submit" className="btn btn-primary">Login</button>
+              <button type="submit" className="btn btn-primary" 
+              onClick={ () => {location.href = '/payments'}}>Login</button>         
           </form>
         </div>
       </div>
