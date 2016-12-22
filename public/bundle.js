@@ -31036,6 +31036,7 @@
 	  switch (action.type) {
 	    case LOAD_USER:
 	      return Object.assign({}, state, { chips: action.chips, user: action.user });
+	      break;
 	
 	    case DELETE_USER:
 	      return Object.assign({}, state, initialState);
@@ -32545,6 +32546,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function mapStateToProps(state) {
+	  console.log("STATE????", state);
 	  var chips = state.payments.chips;
 	  var user = state.payments.user;
 	
@@ -32779,7 +32781,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
 	
@@ -32792,27 +32794,28 @@
 	var LOAD_USER = 'LOAD_USER';
 	var DELETE_USER = 'DELETE_USER';
 	var loadUser = exports.loadUser = function loadUser(user) {
-	    return {
-	        type: LOAD_USER,
-	        user: user
-	    };
+	  return {
+	    type: LOAD_USER,
+	    user: user
+	  };
 	};
 	
 	var getUser = exports.getUser = function getUser() {
-	    return function (dispatch) {
-	        _axios2.default.get("/api/payments").then(function (response) {
-	            var username = response.data[0].username;
-	            dispatch(loadUser(username));
-	        }).catch(function (error) {
-	            return console.error(error);
-	        });
-	    };
+	  return function (dispatch) {
+	    _axios2.default.get("/api/payments").then(function (response) {
+	      console.log("RESPONSE???", response);
+	      var username = response.data[0].username;
+	      dispatch(loadUser(username));
+	    }).catch(function (error) {
+	      return console.error(error);
+	    });
+	  };
 	};
 	
 	var deleteUser = exports.deleteUser = function deleteUser() {
-	    return {
-	        type: DELETE_USER
-	    };
+	  return {
+	    type: DELETE_USER
+	  };
 	};
 
 /***/ }

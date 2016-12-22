@@ -13,6 +13,7 @@ export const getUser = () => {
   return dispatch => {
     axios.get("/api/payments")
       .then(response => {
+        console.log("RESPONSE???", response)
          let username = response.data[0].username;
         dispatch(loadUser(username));
       })
