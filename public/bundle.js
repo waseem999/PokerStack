@@ -85,11 +85,13 @@
 	
 	var _LeaderboardContainer2 = _interopRequireDefault(_LeaderboardContainer);
 	
-	var _PaymentsClass = __webpack_require__(/*! ./components/PaymentsClass */ 311);
+	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 311);
 	
-	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
+	var _PaymentContainer2 = _interopRequireDefault(_PaymentContainer);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
+	
+	var _payments = __webpack_require__(/*! ./action-creators/payments */ 314);
 	
 	var _store = __webpack_require__(/*! ./store */ 261);
 	
@@ -97,7 +99,13 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	/* global document */
+	var loadUserOnEnter = function loadUserOnEnter() {
+	  _store2.default.dispatch((0, _payments.getUser)());
+	};
 	//import Payment from './containers/PaymentContainer';
+	
+	
 	var rootRouter = _react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: _store2.default },
@@ -111,13 +119,11 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _SignupClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/leaderboard', component: _LeaderboardContainer2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentsClass2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentContainer2.default, onEnter: loadUserOnEnter }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/game', component: _GameContainer2.default })
 	    )
 	  )
-	); /* global document */
-	
-	console.log(rootRouter);
+	);
 	
 	(0, _reactDom.render)(rootRouter, document.getElementById('app'));
 
@@ -28894,8 +28900,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = (0, _redux.createStore)(_rootReducer2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default));
-	//createLogger({collapsed: true})
+	exports.default = (0, _redux.createStore)(_rootReducer2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxLogger2.default)({ collapsed: true })));
 
 /***/ },
 /* 262 */
@@ -31009,27 +31014,33 @@
   \**************************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = chipReducer;
+	exports.default = userReducer;
 	
-	var LOAD_CHIPTOTAL = 'LOAD_CHIPTOTAL';
+	var LOAD_USER = 'LOAD_USER';
+	var DELETE_USER = 'DELETE_USER';
 	
 	var initialState = {
 	  chips: 0,
 	  user: ""
 	};
 	
-	function chipReducer() {
+	function userReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case LOAD_CHIPTOTAL:
+	    case LOAD_USER:
 	      return Object.assign({}, state, { chips: action.chips, user: action.user });
+	
+	    case DELETE_USER:
+	      return Object.assign({}, state, initialState);
+	      break;
+	
 	    default:
 	      return state;
 	  }
@@ -31819,7 +31830,7 @@
 	        _react2.default.createElement(
 	          'li',
 	          { className: 'list-group-item' },
-	          'If your final score is above 750 you earn a spot on our Leader Board for a chance to win some sort of prize!'
+	          'If your final score is above 750 you earn a spot on our Leaderboard for a chance to win some sort of prize!'
 	        )
 	      )
 	    ),
@@ -31909,7 +31920,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: '/leaderboard' },
-	              'LEADER BOARD'
+	              'LEADERBOARD'
 	            )
 	          )
 	        )
@@ -32357,7 +32368,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function mapStateToProps(state) {
-	  console.log("STATE", state);
 	  var users = state.leaderboard.users;
 	
 	  return {
@@ -32396,7 +32406,7 @@
 	        _react2.default.createElement(
 	            'button',
 	            { className: 'btn btn-primary', onClick: props.getLeaderboardUsers },
-	            'GET CURRENT LEADERBOARD'
+	            'SHOW CURRENT LEADERBOARD'
 	        ),
 	        _react2.default.createElement(
 	            'table',
@@ -32497,6 +32507,68 @@
 
 /***/ },
 /* 311 */
+/*!*****************************************************!*\
+  !*** ./client/react/containers/PaymentContainer.js ***!
+  \*****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _store = __webpack_require__(/*! ../store */ 261);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
+	
+	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 312);
+	
+	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
+	
+	var _Payments = __webpack_require__(/*! ../components/Payments.jsx */ 313);
+	
+	var _Payments2 = _interopRequireDefault(_Payments);
+	
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 314);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function mapStateToProps(state) {
+	  var chips = state.payments.chips;
+	  var user = state.payments.user;
+	
+	  return {
+	    chips: chips, user: user
+	  };
+	}
+	
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    eraseUserFunction: function eraseUserFunction() {
+	      dispatch(_payments.deleteUser);
+	    },
+	
+	    ChipTotalFunction: function ChipTotalFunction() {
+	      dispatch((0, _payments.getUser)());
+	    }
+	  };
+	}
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PaymentsClass2.default);
+
+/***/ },
+/* 312 */
 /*!**************************************************!*\
   !*** ./client/react/components/PaymentsClass.js ***!
   \**************************************************/
@@ -32524,7 +32596,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 312);
+	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 313);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
@@ -32573,17 +32645,23 @@
 	      this.setState(_defineProperty({}, e.target.id, e.target.value));
 	    }
 	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(e) {
+	      e.preventDefault();
+	      _axios2.default.delete('/api/payments').then(function () {});
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var paymentType = this.state.paymentType;
 	      var accountNumber = this.state.accountNumber;
-	      console.log("PROPS?", this.props);
-	
 	      return _react2.default.createElement(_Payments2.default, {
 	        handleChange: this.handleChange,
 	        createAccount: this.createAccount,
 	        paymentType: paymentType,
-	        accountNumber: accountNumber
+	        accountNumber: accountNumber,
+	        user: this.props.user,
+	        handleDelete: this.handleDelete
 	      });
 	    }
 	  }]);
@@ -32594,7 +32672,7 @@
 	exports.default = _class;
 
 /***/ },
-/* 312 */
+/* 313 */
 /*!**********************************************!*\
   !*** ./client/react/components/Payments.jsx ***!
   \**********************************************/
@@ -32607,6 +32685,7 @@
 	});
 	
 	exports.default = function (props) {
+	  console.log("PAYMENTS PROPS", props);
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'row' },
@@ -32616,7 +32695,8 @@
 	      _react2.default.createElement(
 	        'h1',
 	        null,
-	        'Signup'
+	        props.user,
+	        '\'s Account Settings'
 	      ),
 	      _react2.default.createElement(
 	        'form',
@@ -32624,6 +32704,11 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'form-group' },
+	          _react2.default.createElement(
+	            'h4',
+	            null,
+	            'Add Payment Method'
+	          ),
 	          _react2.default.createElement(
 	            'label',
 	            { htmlFor: 'username' },
@@ -32661,8 +32746,14 @@
 	            onClick: function onClick() {
 	              location.href = '/';
 	            } },
-	          'Create Account'
+	          'Add Payment Method'
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { type: 'submit', className: 'btn btn-danger',
+	          onClick: props.handleDelete },
+	        'Delete Account'
 	      )
 	    )
 	  );
@@ -32677,6 +32768,52 @@
 	var _axios2 = _interopRequireDefault(_axios);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 314 */
+/*!**************************************************!*\
+  !*** ./client/react/action-creators/payments.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LOAD_USER = 'LOAD_USER';
+	var DELETE_USER = 'DELETE_USER';
+	var loadUser = exports.loadUser = function loadUser(user) {
+	    return {
+	        type: LOAD_USER,
+	        user: user
+	    };
+	};
+	
+	var getUser = exports.getUser = function getUser() {
+	    return function (dispatch) {
+	        _axios2.default.get("/api/payments").then(function (response) {
+	            var username = response.data[0].username;
+	            dispatch(loadUser(username));
+	        }).catch(function (error) {
+	            return console.error(error);
+	        });
+	    };
+	};
+	
+	var deleteUser = exports.deleteUser = function deleteUser() {
+	    return {
+	        type: DELETE_USER
+	    };
+	};
 
 /***/ }
 /******/ ]);

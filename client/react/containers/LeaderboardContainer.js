@@ -7,7 +7,6 @@ import { getLeaderboardPlayers } from '../action-creators/leaderboard';
 
 
 function mapStateToProps(state){
-  console.log("STATE", state)
   let users = state.leaderboard.users
  
   return {

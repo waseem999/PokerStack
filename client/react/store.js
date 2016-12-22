@@ -6,6 +6,6 @@ import rootReducer from './reducers/root-reducer';
 export default createStore(
   rootReducer,
   applyMiddleware(thunkMiddleware, 
+  createLogger({collapsed: true})
   )
 );
-    //createLogger({collapsed: true})

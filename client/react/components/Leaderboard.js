@@ -5,7 +5,7 @@ export default function (props) {
     let users = props.users;
 return (
     <div>
-    <button className="btn btn-primary" onClick={props.getLeaderboardUsers}>GET CURRENT LEADERBOARD</button>
+    <button className="btn btn-primary" onClick={props.getLeaderboardUsers}>SHOW CURRENT LEADERBOARD</button>
      <table className="table table-striped" width="647">
         <thead>
             <tr>

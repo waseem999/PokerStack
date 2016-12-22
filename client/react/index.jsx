@@ -10,25 +10,28 @@ import LoginClass from './components/LoginClass';
 import Game from './containers/GameContainer';
 //import Payment from './containers/PaymentContainer';
 import Leaderboard from './containers/LeaderboardContainer';
-import PaymentsClass from './components/PaymentsClass';
+import PaymentContainer from './containers/PaymentContainer';
 import { Provider } from 'react-redux';
+import {getUser} from './action-creators/payments';
 import store from './store';
 
+const loadUserOnEnter = function() {
+  store.dispatch(getUser());
+}
 
 const rootRouter = 
   <Provider store={store}>
       <Router history={browserHistory} >
         <Route path="/" component={App} >
           <IndexRoute component={Home} />
-          <Route path="/signup" component={SignupClass} />
+          <Route path="/signup" component={SignupClass}/>
           <Route path="/login" component={LoginClass} />
           <Route path="/leaderboard" component={Leaderboard} />
-          <Route path="/payments" component={PaymentsClass} />
+          <Route path="/payments" component={PaymentContainer} onEnter={loadUserOnEnter}/>
           <Route path="/game" component={Game} />
         </Route>
       </Router>
   </Provider>;
-  console.log(rootRouter)
 
 
 render(rootRouter, 

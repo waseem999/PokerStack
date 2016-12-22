@@ -33,19 +33,26 @@ handleChange(e) {
       [e.target.id]: e.target.value
     });
   }
+
+
+handleDelete(e) {
+    e.preventDefault();
+    axios.delete('/api/payments')
+    .then( ()=> {}
+    )};
+
   
 render(){
     const paymentType = this.state.paymentType;
     const accountNumber = this.state.accountNumber;
-    console.log("PROPS?", this.props)
-   
-
     return (
         <Payments 
         handleChange={this.handleChange}
         createAccount={this.createAccount}
         paymentType={paymentType}
         accountNumber={accountNumber}
+        user={this.props.user}
+        handleDelete={this.handleDelete}
         />
     );
     }

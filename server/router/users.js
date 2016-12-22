@@ -11,7 +11,7 @@ router.post('/', (req, res, next) => {
    User.create(req.body)
     .then(user => {
       req.session.userId = user.id;
-      req.session.name = user.username;
+      req.session.username = user.username;
       Chips.create({
         userId: user.id
       })
