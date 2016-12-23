@@ -4,6 +4,7 @@ import axios from 'axios';
 import store from '../store';
 import {connect} from 'react-redux';
 import SignupForm from './SignupForm.jsx';
+import Navbar from './Navbar.jsx';
 
 export default class extends Component {
   constructor(props) {
@@ -43,13 +44,16 @@ render(){
     const confirmPassword = this.state.confirmPassword;
 
     return (
-        <SignupForm
-        handleChange={this.handleChange}
-        createUser={this.createUser}
-        username={username}
-        password={password}
-        confirmPassword={confirmPassword}
-        />
+      <div>
+        <Navbar />
+            <SignupForm
+            handleChange={this.handleChange}
+            createUser={this.createUser}
+            username={username}
+            password={password}
+            confirmPassword={confirmPassword}
+            />
+        </div>
     );
-    }
+  }
 }

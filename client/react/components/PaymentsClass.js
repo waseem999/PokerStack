@@ -3,6 +3,8 @@ import axios from 'axios';
 import store from '../store';
 import {connect} from 'react-redux';
 import Payments from './Payments.jsx';
+import { Link } from 'react-router';
+import Navbar from './Navbar.jsx';
 
 export default class extends Component {
   constructor(props) {
@@ -43,17 +45,29 @@ handleDelete(e) {
 
   
 render(){
+  if (this.props.user){
     const paymentType = this.state.paymentType;
     const accountNumber = this.state.accountNumber;
     return (
-        <Payments 
-        handleChange={this.handleChange}
-        createAccount={this.createAccount}
-        paymentType={paymentType}
-        accountNumber={accountNumber}
-        user={this.props.user}
-        handleDelete={this.handleDelete}
-        />
+      <div>
+        <Navbar />
+          <Payments 
+          handleChange={this.handleChange}
+          createAccount={this.createAccount}
+          paymentType={paymentType}
+          accountNumber={accountNumber}
+          user={this.props.user}
+          handleDelete={this.handleDelete}
+          />
+      </div>
     );
     }
+  else {
+    return (
+      <div>
+        <Navbar />
+          <h1>Please Login First!</h1>
+      </div>)
+  }
+}
 }

@@ -9,7 +9,6 @@ const User = models.User;
 
 
 router.get('/', (req, res, next) => {
-  
    return User.findAll({ 
     where: { 
       username: req.session.name
@@ -19,6 +18,8 @@ router.get('/', (req, res, next) => {
     res.json(user)})
   .catch(next);
 });
+
+
 
 router.post('/', (req, res, next) => {
    Payments.create({
@@ -33,14 +34,32 @@ router.post('/', (req, res, next) => {
 });
 
 router.delete('/', function (req, res, next) {
-  User.destroy({
+
+     let chipdestroy = Chips.destroy({
+        where : {
+          userId: req.session.userId
+        }
+      });
+
+      let paymentdestroy = 
+      Payments.destroy({
+        where : {
+          userId: req.session.userId
+        }
+      })
+
+ Promise.all([
+   chipdestroy, paymentdestroy
+  ])
+    .then((res) => {
+      User.destroy({
                 where: {
                     username : req.session.name
-                    },
-                    include: [Payments, Chips]
+                    }
                   })
-  .then(() => res.status(204).end())
+    })
   .catch(next);
+
 });
 
 

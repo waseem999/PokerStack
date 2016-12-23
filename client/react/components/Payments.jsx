@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 export default function (props) {
-  console.log("PAYMENTS PROPS", props)
 return (
     <div className="row">
         <div className="col-md-4 col-md-offset-4">

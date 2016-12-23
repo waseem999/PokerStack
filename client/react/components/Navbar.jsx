@@ -9,7 +9,7 @@ const Navbar = () => (
           <li className="active"><Link to="/">HOME</Link></li>
           <li className="active"><Link to="/login">LOGIN</Link></li>
           <li className="active"><Link to="/signup">SIGNUP</Link></li>
-          <li className="active"><Link to="/payments">CHIP BANK</Link></li>
+          <li className="active"><Link to="/payments">MANAGE ACCOUNT</Link></li>
           <li className="active"><Link to="/leaderboard">LEADERBOARD</Link></li>
         </ul>
       </div>

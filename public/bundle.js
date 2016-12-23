@@ -69,7 +69,7 @@
 	
 	var _SignupClass2 = _interopRequireDefault(_SignupClass);
 	
-	var _Home = __webpack_require__(/*! ./components/Home.jsx */ 302);
+	var _Home = __webpack_require__(/*! ./components/Home.jsx */ 303);
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
@@ -27240,6 +27240,10 @@
 	
 	var _SignupForm2 = _interopRequireDefault(_SignupForm);
 	
+	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 302);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -27292,13 +27296,18 @@
 	      var password = this.state.password;
 	      var confirmPassword = this.state.confirmPassword;
 	
-	      return _react2.default.createElement(_SignupForm2.default, {
-	        handleChange: this.handleChange,
-	        createUser: this.createUser,
-	        username: username,
-	        password: password,
-	        confirmPassword: confirmPassword
-	      });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_Navbar2.default, null),
+	        _react2.default.createElement(_SignupForm2.default, {
+	          handleChange: this.handleChange,
+	          createUser: this.createUser,
+	          username: username,
+	          password: password,
+	          confirmPassword: confirmPassword
+	        })
+	      );
 	    }
 	  }]);
 
@@ -31774,79 +31783,6 @@
 
 /***/ },
 /* 302 */
-/*!******************************************!*\
-  !*** ./client/react/components/Home.jsx ***!
-  \******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 178);
-	
-	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 303);
-	
-	var _Navbar2 = _interopRequireDefault(_Navbar);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Home = function Home() {
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'App' },
-	    _react2.default.createElement(_Navbar2.default, null),
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'App-header' },
-	      _react2.default.createElement('img', { src: "/stylesheets/card.png", className: 'App-logo', alt: 'logo' }),
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Let\'s Play Poker!'
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'ul',
-	        { className: 'list-group' },
-	        _react2.default.createElement(
-	          'li',
-	          { className: 'list-group-item' },
-	          'Welcome to Poker Spot! When you register you start off with 500 chips.'
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          { className: 'list-group-item' },
-	          'One in 3 random lucky people start off with 1000 chips!'
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          { className: 'list-group-item' },
-	          'If your final score is above 750 you earn a spot on our Leaderboard for a chance to win some sort of prize!'
-	        )
-	      )
-	    ),
-	    _react2.default.createElement(
-	      _reactRouter.Link,
-	      { type: 'button', className: 'btn btn-danger', to: '/game' },
-	      'join table!'
-	    )
-	  );
-	};
-	
-	exports.default = Home;
-
-/***/ },
-/* 303 */
 /*!********************************************!*\
   !*** ./client/react/components/Navbar.jsx ***!
   \********************************************/
@@ -31912,7 +31848,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: '/payments' },
-	              'CHIP BANK'
+	              'MANAGE ACCOUNT'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -31931,6 +31867,79 @@
 	};
 	
 	exports.default = Navbar;
+
+/***/ },
+/* 303 */
+/*!******************************************!*\
+  !*** ./client/react/components/Home.jsx ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 178);
+	
+	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 302);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Home = function Home() {
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'App' },
+	    _react2.default.createElement(_Navbar2.default, null),
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'App-header' },
+	      _react2.default.createElement('img', { src: "/stylesheets/card.png", className: 'App-logo', alt: 'logo' }),
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Let\'s Play Poker!'
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'ul',
+	        { className: 'list-group' },
+	        _react2.default.createElement(
+	          'li',
+	          { className: 'list-group-item' },
+	          'Welcome to Poker Spot! When you register you start off with 500 chips.'
+	        ),
+	        _react2.default.createElement(
+	          'li',
+	          { className: 'list-group-item' },
+	          'One in 3 random lucky people start off with 1000 chips!'
+	        ),
+	        _react2.default.createElement(
+	          'li',
+	          { className: 'list-group-item' },
+	          'If your final score is above 750 you earn a spot on our Leaderboard for a chance to win some sort of prize!'
+	        )
+	      )
+	    ),
+	    _react2.default.createElement(
+	      _reactRouter.Link,
+	      { type: 'button', className: 'btn btn-danger', to: '/game' },
+	      'join table!'
+	    )
+	  );
+	};
+	
+	exports.default = Home;
 
 /***/ },
 /* 304 */
@@ -31964,6 +31973,10 @@
 	var _LoginForm = __webpack_require__(/*! ./LoginForm */ 305);
 	
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
+	
+	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 302);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32017,58 +32030,63 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'row' },
+	        null,
+	        _react2.default.createElement(_Navbar2.default, null),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-md-4 col-md-offset-4' },
+	          { className: 'row' },
 	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Login'
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { onSubmit: this.handleLogin },
+	            'div',
+	            { className: 'col-md-4 col-md-offset-4' },
 	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'username' },
-	                'username'
-	              ),
-	              _react2.default.createElement('input', {
-	                onChange: this.handleChange,
-	                value: this.state.username,
-	                type: 'text',
-	                className: 'form-control',
-	                id: 'username',
-	                'aria-describedby': 'usernameHelp',
-	                placeholder: 'Enter username' })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'password' },
-	                'Password'
-	              ),
-	              _react2.default.createElement('input', {
-	                onChange: this.handleChange,
-	                value: this.state.password,
-	                type: 'text',
-	                className: 'form-control',
-	                id: 'password',
-	                placeholder: 'Password' })
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'submit', className: 'btn btn-primary',
-	                onClick: function onClick() {
-	                  location.href = '/payments';
-	                } },
+	              'h1',
+	              null,
 	              'Login'
+	            ),
+	            _react2.default.createElement(
+	              'form',
+	              { onSubmit: this.handleLogin },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { htmlFor: 'username' },
+	                  'username'
+	                ),
+	                _react2.default.createElement('input', {
+	                  onChange: this.handleChange,
+	                  value: this.state.username,
+	                  type: 'text',
+	                  className: 'form-control',
+	                  id: 'username',
+	                  'aria-describedby': 'usernameHelp',
+	                  placeholder: 'Enter username' })
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { htmlFor: 'password' },
+	                  'Password'
+	                ),
+	                _react2.default.createElement('input', {
+	                  onChange: this.handleChange,
+	                  value: this.state.password,
+	                  type: 'text',
+	                  className: 'form-control',
+	                  id: 'password',
+	                  placeholder: 'Password' })
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'submit', className: 'btn btn-primary',
+	                  onClick: function onClick() {
+	                    location.href = '/payments';
+	                  } },
+	                'Login'
+	              )
 	            )
 	          )
 	        )
@@ -32404,6 +32422,7 @@
 	    return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(_Navbar2.default, null),
 	        _react2.default.createElement(
 	            'button',
 	            { className: 'btn btn-primary', onClick: props.getLeaderboardUsers },
@@ -32465,6 +32484,10 @@
 	var _axios = __webpack_require__(/*! axios */ 236);
 	
 	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 302);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32602,6 +32625,12 @@
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
+	var _reactRouter = __webpack_require__(/*! react-router */ 178);
+	
+	var _Navbar = __webpack_require__(/*! ./Navbar.jsx */ 302);
+	
+	var _Navbar2 = _interopRequireDefault(_Navbar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -32655,16 +32684,34 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var paymentType = this.state.paymentType;
-	      var accountNumber = this.state.accountNumber;
-	      return _react2.default.createElement(_Payments2.default, {
-	        handleChange: this.handleChange,
-	        createAccount: this.createAccount,
-	        paymentType: paymentType,
-	        accountNumber: accountNumber,
-	        user: this.props.user,
-	        handleDelete: this.handleDelete
-	      });
+	      if (this.props.user) {
+	        var paymentType = this.state.paymentType;
+	        var accountNumber = this.state.accountNumber;
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(_Navbar2.default, null),
+	          _react2.default.createElement(_Payments2.default, {
+	            handleChange: this.handleChange,
+	            createAccount: this.createAccount,
+	            paymentType: paymentType,
+	            accountNumber: accountNumber,
+	            user: this.props.user,
+	            handleDelete: this.handleDelete
+	          })
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(_Navbar2.default, null),
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Please Login First!'
+	          )
+	        );
+	      }
 	    }
 	  }]);
 
@@ -32687,7 +32734,6 @@
 	});
 	
 	exports.default = function (props) {
-	  console.log("PAYMENTS PROPS", props);
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'row' },
@@ -32781,7 +32827,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
 	
@@ -32794,28 +32840,27 @@
 	var LOAD_USER = 'LOAD_USER';
 	var DELETE_USER = 'DELETE_USER';
 	var loadUser = exports.loadUser = function loadUser(user) {
-	  return {
-	    type: LOAD_USER,
-	    user: user
-	  };
+	    return {
+	        type: LOAD_USER,
+	        user: user
+	    };
 	};
 	
 	var getUser = exports.getUser = function getUser() {
-	  return function (dispatch) {
-	    _axios2.default.get("/api/payments").then(function (response) {
-	      console.log("RESPONSE???", response);
-	      var username = response.data[0].username;
-	      dispatch(loadUser(username));
-	    }).catch(function (error) {
-	      return console.error(error);
-	    });
-	  };
+	    return function (dispatch) {
+	        _axios2.default.get("/api/payments").then(function (response) {
+	            var username = response.data[0].username;
+	            dispatch(loadUser(username));
+	        }).catch(function (error) {
+	            return console.error(error);
+	        });
+	    };
 	};
 	
 	var deleteUser = exports.deleteUser = function deleteUser() {
-	  return {
-	    type: DELETE_USER
-	  };
+	    return {
+	        type: DELETE_USER
+	    };
 	};
 
 /***/ }
