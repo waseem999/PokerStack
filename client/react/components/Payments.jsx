@@ -34,8 +34,7 @@ return (
               <button type="submit" className="btn btn-primary" 
               onClick={ () => {location.href = '/'}}>Add Payment Method</button>
             </form>
-             <button type="submit" className="btn btn-danger" 
-            onClick={props.handleDelete}>Delete Account</button>
+             
         </div>
       </div>
     )

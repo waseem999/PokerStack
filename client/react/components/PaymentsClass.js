@@ -5,6 +5,11 @@ import {connect} from 'react-redux';
 import Payments from './Payments.jsx';
 import { Link } from 'react-router';
 import Navbar from './Navbar.jsx';
+import PurchaseChips from './PurchaseChips';
+import DeleteAccount from './DeleteAccountButton';
+
+
+//consider using componentdidmount instead of loading using onEnter to fix async
 
 export default class extends Component {
   constructor(props) {
@@ -12,10 +17,12 @@ export default class extends Component {
     this.state = {
       paymentType: '',
       accountNumber: '',
+      chipBalance: 0
      
     }
     this.createAccount = this.createAccount.bind(this);
     this.handleChange = this.handleChange.bind(this);
+     this.handleChange = this.handleChange.bind(this); this.chipAdd = this.chipAdd.bind(this);
   }
 
   createAccount(e) {
@@ -25,9 +32,32 @@ export default class extends Component {
     axios.post('/api/payments', {
       paymentType: paymentType,
       accountNumber: accountNumber
+     
     })
     .then( ()=> {}
     )};
+
+  createAccount(e) {
+    let paymentType = this.state.paymentType;
+    let accountNumber = this.state.accountNumber;
+    e.preventDefault();
+    axios.post('/api/payments', {
+      paymentType: paymentType,
+      accountNumber: accountNumber
+     
+    })
+    .then( ()=> {}
+    )};
+
+  chipAdd(e) {
+    e.preventDefault();
+    let chipBalance = parseInt(this.state.chipBalance);
+    axios.put('/api/payments', {
+      chipBalance: chipBalance
+    })
+    .then( ()=> {}
+    )};
+
 
 
 handleChange(e) {
@@ -48,6 +78,7 @@ render(){
   if (this.props.user){
     const paymentType = this.state.paymentType;
     const accountNumber = this.state.accountNumber;
+    const chipBalance = this.state.chipBalance;
     return (
       <div>
         <Navbar />
@@ -57,7 +88,16 @@ render(){
           paymentType={paymentType}
           accountNumber={accountNumber}
           user={this.props.user}
-          handleDelete={this.handleDelete}
+    
+          />
+          <PurchaseChips 
+            chipAdd={this.chipAdd}
+            user={this.props.user}
+            chipBalance={chipBalance}
+            handleChange={this.handleChange}
+            />
+          <DeleteAccount
+            handleDelete={this.handleDelete}
           />
       </div>
     );

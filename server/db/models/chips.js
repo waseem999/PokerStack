@@ -12,10 +12,10 @@ module.exports = db.define('chips', {
     hooks: {
         beforeValidate: function (chips) {
             let randomNumber = Math.ceil((Math.random()*3));
-            if (randomNumber === 2) {
+            if (randomNumber === 2 && !chips.chiptotal) {
                 chips.chiptotal = 1000;
             }
-            else {
+            else if (!chips.chiptotal){
                 chips.chiptotal = 500;
             }
         }
@@ -33,7 +33,7 @@ module.exports = db.define('chips', {
         },
     instanceMethods : {
         addChips: function (additionalchips) {
-           return this.chiptotal += additionalchips;
+        return this.chiptotal += additionalchips
         }
     },
     

@@ -33,6 +33,19 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/', (req, res, next) => {
+    Chips.findOne({
+      where : {
+        userId : req.session.userId
+      }
+    })
+    .then(chips => {
+      let addamount = chips.addChips(req.body.chipBalance);
+      chips.update({chiptotal : addamount})
+    })
+  .catch(next);
+});
+
 router.delete('/', function (req, res, next) {
 
      let chipdestroy = Chips.destroy({

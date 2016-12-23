@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 import {getUser} from './action-creators/payments';
 import store from './store';
 
+
 const loadUserOnEnter = function() {
   store.dispatch(getUser());
 }

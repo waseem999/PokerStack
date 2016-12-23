@@ -6,8 +6,8 @@ import PaymentsClass from '../components/PaymentsClass';
 import Payments from '../components/Payments.jsx';
 import { getUser, deleteUser } from '../action-creators/payments';
 
+
 function mapStateToProps(state){
-  console.log("STATE????", state)
   let chips = state.payments.chips;
   let user = state.payments.user;
 
@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch){
       dispatch(deleteUser)
     },
 
-    ChipTotalFunction: function(){
+    chipTotalFunction: function(){
       dispatch(getUser())
     }
   }

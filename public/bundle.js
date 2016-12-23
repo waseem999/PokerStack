@@ -91,7 +91,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _payments = __webpack_require__(/*! ./action-creators/payments */ 314);
+	var _payments = __webpack_require__(/*! ./action-creators/payments */ 316);
 	
 	var _store = __webpack_require__(/*! ./store */ 261);
 	
@@ -32564,12 +32564,11 @@
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 314);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 316);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function mapStateToProps(state) {
-	  console.log("STATE????", state);
 	  var chips = state.payments.chips;
 	  var user = state.payments.user;
 	
@@ -32584,7 +32583,7 @@
 	      dispatch(_payments.deleteUser);
 	    },
 	
-	    ChipTotalFunction: function ChipTotalFunction() {
+	    chipTotalFunction: function chipTotalFunction() {
 	      dispatch((0, _payments.getUser)());
 	    }
 	  };
@@ -32631,6 +32630,14 @@
 	
 	var _Navbar2 = _interopRequireDefault(_Navbar);
 	
+	var _PurchaseChips = __webpack_require__(/*! ./PurchaseChips */ 314);
+	
+	var _PurchaseChips2 = _interopRequireDefault(_PurchaseChips);
+	
+	var _DeleteAccountButton = __webpack_require__(/*! ./DeleteAccountButton */ 315);
+	
+	var _DeleteAccountButton2 = _interopRequireDefault(_DeleteAccountButton);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -32640,6 +32647,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//consider using componentdidmount instead of loading using onEnter to fix async
 	
 	var _class = function (_Component) {
 	  _inherits(_class, _Component);
@@ -32651,11 +32660,13 @@
 	
 	    _this.state = {
 	      paymentType: '',
-	      accountNumber: ''
+	      accountNumber: '',
+	      chipBalance: 0
 	
 	    };
 	    _this.createAccount = _this.createAccount.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleChange = _this.handleChange.bind(_this);_this.chipAdd = _this.chipAdd.bind(_this);
 	    return _this;
 	  }
 	
@@ -32668,6 +32679,28 @@
 	      _axios2.default.post('/api/payments', {
 	        paymentType: paymentType,
 	        accountNumber: accountNumber
+	
+	      }).then(function () {});
+	    }
+	  }, {
+	    key: 'createAccount',
+	    value: function createAccount(e) {
+	      var paymentType = this.state.paymentType;
+	      var accountNumber = this.state.accountNumber;
+	      e.preventDefault();
+	      _axios2.default.post('/api/payments', {
+	        paymentType: paymentType,
+	        accountNumber: accountNumber
+	
+	      }).then(function () {});
+	    }
+	  }, {
+	    key: 'chipAdd',
+	    value: function chipAdd(e) {
+	      e.preventDefault();
+	      var chipBalance = parseInt(this.state.chipBalance);
+	      _axios2.default.put('/api/payments', {
+	        chipBalance: chipBalance
 	      }).then(function () {});
 	    }
 	  }, {
@@ -32687,6 +32720,7 @@
 	      if (this.props.user) {
 	        var paymentType = this.state.paymentType;
 	        var accountNumber = this.state.accountNumber;
+	        var chipBalance = this.state.chipBalance;
 	        return _react2.default.createElement(
 	          'div',
 	          null,
@@ -32696,7 +32730,16 @@
 	            createAccount: this.createAccount,
 	            paymentType: paymentType,
 	            accountNumber: accountNumber,
+	            user: this.props.user
+	
+	          }),
+	          _react2.default.createElement(_PurchaseChips2.default, {
+	            chipAdd: this.chipAdd,
 	            user: this.props.user,
+	            chipBalance: chipBalance,
+	            handleChange: this.handleChange
+	          }),
+	          _react2.default.createElement(_DeleteAccountButton2.default, {
 	            handleDelete: this.handleDelete
 	          })
 	        );
@@ -32796,12 +32839,6 @@
 	            } },
 	          'Add Payment Method'
 	        )
-	      ),
-	      _react2.default.createElement(
-	        'button',
-	        { type: 'submit', className: 'btn btn-danger',
-	          onClick: props.handleDelete },
-	        'Delete Account'
 	      )
 	    )
 	  );
@@ -32819,6 +32856,108 @@
 
 /***/ },
 /* 314 */
+/*!**************************************************!*\
+  !*** ./client/react/components/PurchaseChips.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (props) {
+	  var chips = props.chips;
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'row' },
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'col-md-4 col-md-offset-4' },
+	      _react2.default.createElement(
+	        'form',
+	        { onSubmit: props.chipAdd },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'form-group' },
+	          _react2.default.createElement(
+	            'h4',
+	            null,
+	            'Purchase Additional Chips'
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            { htmlFor: 'username' },
+	            'Enter Quantity:   '
+	          ),
+	          _react2.default.createElement('input', {
+	            value: props.chipBalance,
+	            onChange: props.handleChange,
+	            type: 'number',
+	            name: 'chipBalance',
+	            id: 'chipBalance',
+	            'aria-describedby': 'usernameHelp',
+	            placeholder: 'Enter Chip Quantity' })
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'submit', className: 'btn btn-primary' },
+	          'Add Chips'
+	        )
+	      )
+	    )
+	  );
+	};
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 315 */
+/*!********************************************************!*\
+  !*** ./client/react/components/DeleteAccountButton.js ***!
+  \********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	        value: true
+	});
+	
+	exports.default = function (props) {
+	        return _react2.default.createElement(
+	                'div',
+	                { className: 'col-md-4 col-md-offset-4' },
+	                _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', className: 'btn btn-danger',
+	                                onClick: props.handleDelete },
+	                        'Delete Account'
+	                )
+	        );
+	};
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 316 */
 /*!**************************************************!*\
   !*** ./client/react/action-creators/payments.js ***!
   \**************************************************/
