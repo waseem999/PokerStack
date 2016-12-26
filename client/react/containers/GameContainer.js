@@ -36,33 +36,33 @@ handleSubmit(e) {
  render() {
     return (
       <div className="row">
-        <div className="col-xs-6 col-sm-3">
-          <h1>Poker</h1>
-          <form onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="bet">Bet</label>
-              <input
-                type="text"
-                className="form-control"
-                onChange={this.handleChange}
-                id="bet"
-                value={this.state.inputValue}
-                placeholder="Bet Amount" />
+          <div className="col-xs-12 col-sm-12">
+            <h1>Poker</h1>
+          </div>
+          <div className="col-xs-4 col-sm-4">
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="bet">Bet</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  onChange={this.handleChange}
+                  id="bet"
+                  value={this.state.inputValue}
+                  placeholder="Bet Amount" />
+              </div>
+              <button type="submit" className="btn-sm btn-primary">Bet</button>
+            </form>
             </div>
-            <button type="submit" className="btn btn-primary">Bet</button>
-          </form>
-
-
-
-          <form onSubmit={() => {console.log("check")}}>
-              <button type="submit" className="btn btn-primary">Check</button>
-          </form>
-
-          <form onSubmit={() => {console.log("check")}}>
-              <button type="submit" className="btn btn-primary">Fold</button>
-          </form>
-
-        </div>
+               <button className="btn-sm btn-primary">
+                  <i className="icon icon-font"></i> 
+                  <span className="hidden-xs">Check</span>
+              </button>
+        
+             <button className="btn-sm btn-primary">
+                <i className="icon icon-font"></i> 
+                <span className="hidden-xs">Fold</span>
+            </button>
       </div>
     )
   }

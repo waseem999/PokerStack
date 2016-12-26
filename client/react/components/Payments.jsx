@@ -29,7 +29,7 @@ return (
                   type="accountNumber"
                   className="form-control"
                   id="accountNumber"
-                  placeholder="accountNumber" />
+                  placeholder="Account Number" />
               </div>
               <button type="submit" className="btn btn-primary" 
               onClick={ () => {location.href = '/'}}>Add Payment Method</button>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import store from '../store';
 import {connect} from 'react-redux';
-import LoginForm from './LoginForm';
+//import LoginForm from './LoginForm';
 import Navbar from './Navbar.jsx';
 
 export default class extends Component {
@@ -49,7 +49,7 @@ render(){
                 <h1>Login</h1>
               <form onSubmit={this.handleLogin}>
                 <div className="form-group">
-                  <label htmlFor="username">username</label>
+                  <label htmlFor="username">Username</label>
                   <input 
                     onChange={this.handleChange} 
                     value={this.state.username}
@@ -57,7 +57,7 @@ render(){
                     className="form-control"
                     id="username"
                     aria-describedby="usernameHelp"
-                    placeholder="Enter username" />
+                    placeholder="Enter Username" />
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">Password</label>

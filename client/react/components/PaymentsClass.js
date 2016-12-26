@@ -7,6 +7,8 @@ import { Link } from 'react-router';
 import Navbar from './Navbar.jsx';
 import PurchaseChips from './PurchaseChips';
 import DeleteAccount from './DeleteAccountButton';
+import {getUser} from '../action-creators/payments';
+
 
 
 //consider using componentdidmount instead of loading using onEnter to fix async
@@ -46,17 +48,17 @@ export default class extends Component {
       accountNumber: accountNumber
      
     })
-    .then( ()=> {}
+    .then( (returned)=> {console.log(returned)}
     )};
 
   chipAdd(e) {
-    e.preventDefault();
+    
     let chipBalance = parseInt(this.state.chipBalance);
     axios.put('/api/payments', {
       chipBalance: chipBalance
-    })
-    .then( ()=> {}
-    )};
+    });
+    this.state.chipBalance = 0;
+    };
 
 
 
@@ -67,11 +69,18 @@ handleChange(e) {
   }
 
 
+
 handleDelete(e) {
     e.preventDefault();
     axios.delete('/api/payments')
     .then( ()=> {}
-    )};
+    )}
+
+
+
+componentDidMount() {
+store.dispatch(getUser());
+}
 
   
 render(){

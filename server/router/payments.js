@@ -9,12 +9,14 @@ const User = models.User;
 
 
 router.get('/', (req, res, next) => {
-   return User.findAll({ 
+   return Chips.findAll({ 
     where: { 
-      username: req.session.name
-    } 
+      userId: req.session.userId
+    },
+      include: [User]
   })
     .then(user => {
+      console.log("USER??", user)
     res.json(user)})
   .catch(next);
 });
@@ -34,7 +36,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/', (req, res, next) => {
-    Chips.findOne({
+   Chips.findOne({
       where : {
         userId : req.session.userId
       }

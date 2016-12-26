@@ -5,9 +5,17 @@ var express = require('express');
 const app = express();
 const path = require('path');
 const index = require('./server/router/index.js');
-const Users = require('./server/db/models/user');
-const Chips = require('./server/db/models/chips');
-const Payments = require('./server/db/models/payments');
+//const Users = require('./server/db/models/user');
+//const Chips = require('./server/db/models/chips');
+//const Payments = require('./server/db/models/payments');
+//const Cards = require('./server/db/models/cards');
+const sequelize_fixtures = require('sequelize-fixtures');
+const models = require('./server/db/models'); 
+const Payments = models.Payments;
+const Chips = models.Chips;
+const Users = models.User;
+const Cards = models.cards;
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,14 +49,17 @@ app.use(function (err, req, res, next){
 	console.error(err);
 	res.status(500).send(err.message)
 });
-Users.sync({})
+
+Cards.sync({}).then(sequelize_fixtures.loadFile('server/card_data.json', models))
+.then(Users.sync({})
     .then(()=> Chips.sync({}))
     .then(()=>Payments.sync({}))
     .then(function () {
         app.listen(3001, function () {
             console.log('Server is listening on port 3001!');
         });
-    });
+  })
+);
 
 
 

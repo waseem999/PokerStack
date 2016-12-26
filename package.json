@@ -34,6 +34,7 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",
     "sequelize": "^3.27.0",
+    "sequelize-fixtures": "^0.5.6",
     "webpack": "^1.14.0"
   },
   "devDependencies": {

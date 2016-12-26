@@ -5,7 +5,7 @@ export default function (props) {
   let chips = props.chips;
 return (
     <div className="row">
-        <div className="col-md-4 col-md-offset-4">
+        <div>
 
             <form onSubmit={props.chipAdd}>
                 <div className="form-group">

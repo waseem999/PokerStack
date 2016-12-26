@@ -1,0 +1,441 @@
+    [
+        {
+            "model": "cards",
+            "data": {
+                "value": 2,
+                "face": "two",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 2,
+                "face": "two",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 2,
+                "face": "two",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 2,
+                "face": "two",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 3,
+                "face": "three",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 3,
+                "face": "three",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 3,
+                "face": "three",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 3,
+                "face": "three",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 4,
+                "face": "four",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 4,
+                "face": "four",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 4,
+                "face": "four",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 4,
+                "face": "four",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 5,
+                "face": "five",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 5,
+                "face": "five",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 5,
+                "face": "five",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 5,
+                "face": "five",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 6,
+                "face": "six",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 6,
+                "face": "six",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 6,
+                "face": "six",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 6,
+                "face": "six",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 7,
+                "face": "seven",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 7,
+                "face": "seven",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 7,
+                "face": "seven",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 7,
+                "face": "seven",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 8,
+                "face": "eight",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 8,
+                "face": "eight",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 8,
+                "face": "eight",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 8,
+                "face": "eight",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 9,
+                "face": "nine",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 9,
+                "face": "nine",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 9,
+                "face": "nine",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 9,
+                "face": "nine",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "ten",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "ten",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "ten",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "ten",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "jack",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "jack",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "jack",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "jack",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "queen",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "queen",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "queen",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "queen",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "king",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "king",
+                "suit": "hearts"
+            }
+        },
+         {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "king",
+                "suit": "clubs"
+            }
+        },
+         {
+            "model": "cards",
+            "data": {
+                "value": 10,
+                "face": "king",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 11,
+                "face": "ace",
+                "suit": "spades"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 11,
+                "face": "ace",
+                "suit": "hearts"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 11,
+                "face": "ace",
+                "suit": "clubs"
+            }
+        },
+        {
+            "model": "cards",
+            "data": {
+                "value": 11,
+                "face": "ace",
+                "suit": "diamonds"
+            }
+        },
+        {
+            "model": "User",
+            "data": {
+                "username": "Isildur",
+                "password": "isildur",
+                "chipId": 1
+            }
+        },
+        {
+            "model": "Chips",
+            "data": {
+                "chiptotal": 1400,
+                "userId": 1
+            }
+        },
+        {
+            "model": "Payments",
+            "data": {
+                "paymentType": "VISA",
+                "accountNumber": "3240150323887712"
+            }
+        }
+
+    ]

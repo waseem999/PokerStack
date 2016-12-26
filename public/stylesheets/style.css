@@ -38,6 +38,7 @@
 .btn-primary {
     background: #0099cc;
     color: #ffffff;
+    margin: 10px
 }
  
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
@@ -67,3 +68,4 @@
 body {
   background-color: #B0C4DE
 }
+
