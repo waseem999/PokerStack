@@ -40,6 +40,12 @@
     color: #ffffff;
     margin: 10px
 }
+
+.btn-custom {
+    background: #650000;
+    color: #ffffff;
+    margin: 10px
+}
  
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
     background: #33a6cc;

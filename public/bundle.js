@@ -91,7 +91,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _payments = __webpack_require__(/*! ./action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ./action-creators/payments */ 307);
 	
 	var _store = __webpack_require__(/*! ./store */ 261);
 	
@@ -30977,6 +30977,8 @@
 	  switch (action.type) {
 	    case LOG_BET:
 	      return Object.assign({}, state, { potsize: action.bet });
+	      break;
+	
 	    default:
 	      return state;
 	  }
@@ -31029,6 +31031,7 @@
 	exports.default = userReducer;
 	
 	var LOAD_USER = 'LOAD_USER';
+	var MODIFY_CHIPS = 'MODIFY_CHIPS';
 	var DELETE_USER = 'DELETE_USER';
 	
 	var initialState = {
@@ -31047,6 +31050,10 @@
 	
 	    case DELETE_USER:
 	      return Object.assign({}, state, initialState);
+	      break;
+	
+	    case MODIFY_CHIPS:
+	      return Object.assign({}, state, { chips: action.chips });
 	      break;
 	
 	    default:
@@ -32126,9 +32133,9 @@
 	
 	var _GameClass2 = _interopRequireDefault(_GameClass);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 307);
 	
-	var _bets = __webpack_require__(/*! ../action-creators/bets */ 307);
+	var _bets = __webpack_require__(/*! ../action-creators/bets */ 308);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32143,13 +32150,14 @@
 	}
 	
 	function mapDispatchToProps(dispatch) {
+	
 	  return {
 	    eraseUserFunction: function eraseUserFunction() {
-	      dispatch(_payments.deleteUser);
+	      dispatch();
 	    },
 	
-	    getUserFunction: function getUserFunction() {
-	      dispatch((0, _payments.getUser)());
+	    modifyUserChips: function modifyUserChips(chips) {
+	      dispatch((0, _payments.modifyChips)(chips));
 	    },
 	
 	    logBetAmount: function logBetAmount(bet) {
@@ -32187,8 +32195,6 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _bets = __webpack_require__(/*! ../action-creators/bets */ 307);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32206,9 +32212,9 @@
 	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 	
 	    _this.state = {
-	      inputValue: 0
+	      inputValue: 0,
+	      lowerbet: false
 	    };
-	    _this.getBetAmount = _this.getBetAmount.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    return _this;
@@ -32222,18 +32228,25 @@
 	      });
 	    }
 	  }, {
-	    key: 'getBetAmount',
-	    value: function getBetAmount(betvalue) {
-	      var bet = parseInt(betvalue);
-	      _store2.default.dispatch((0, _bets.logBet)(bet));
-	    }
-	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(e) {
 	      e.preventDefault();
 	      var betvalue = this.state.inputValue;
 	      var bet = parseInt(betvalue);
-	      this.props.logBetAmount(bet);
+	      var reducedbet = void 0;
+	      if (bet > this.props.chips) {
+	        this.setState({
+	          lowerbet: true
+	        });
+	        this.state.inputValue = 0;
+	      } else {
+	        this.setState({
+	          lowerbet: false
+	        });
+	        this.props.logBetAmount(bet);
+	        reducedbet = this.props.chips - bet;
+	        this.props.modifyUserChips(reducedbet);
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -32281,12 +32294,12 @@
 	            ),
 	            _react2.default.createElement(
 	              'button',
-	              { type: 'submit', className: 'btn-sm btn-primary' },
+	              { type: 'submit', className: 'btn-sm btn-custom' },
 	              'Bet'
 	            ),
 	            _react2.default.createElement(
 	              'button',
-	              { className: 'btn-sm btn-primary' },
+	              { className: 'btn-sm btn-custom' },
 	              _react2.default.createElement(
 	                'span',
 	                { className: 'hidden-xs' },
@@ -32295,6 +32308,11 @@
 	            )
 	          )
 	        ),
+	        this.state.lowerbet ? _react2.default.createElement(
+	          'strong',
+	          null,
+	          'REDUCE YOUR BET AMOUNT'
+	        ) : null,
 	        _react2.default.createElement(
 	          'div',
 	          null,
@@ -32327,27 +32345,6 @@
 
 /***/ },
 /* 307 */
-/*!**********************************************!*\
-  !*** ./client/react/action-creators/bets.js ***!
-  \**********************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var LOG_BET = 'LOG_BET';
-	
-	var logBet = exports.logBet = function logBet(bet) {
-	    return {
-	        type: LOG_BET,
-	        bet: bet
-	    };
-	};
-
-/***/ },
-/* 308 */
 /*!**************************************************!*\
   !*** ./client/react/action-creators/payments.js ***!
   \**************************************************/
@@ -32358,7 +32355,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
+	exports.modifyChips = exports.deleteUser = exports.getUser = exports.loadUser = undefined;
 	
 	var _axios = __webpack_require__(/*! axios */ 236);
 	
@@ -32368,6 +32365,7 @@
 	
 	var LOAD_USER = 'LOAD_USER';
 	var DELETE_USER = 'DELETE_USER';
+	var MODIFY_CHIPS = 'MODIFY_CHIPS';
 	var loadUser = exports.loadUser = function loadUser(user, chips) {
 	    return {
 	        type: LOAD_USER,
@@ -32391,6 +32389,35 @@
 	var deleteUser = exports.deleteUser = function deleteUser() {
 	    return {
 	        type: DELETE_USER
+	    };
+	};
+	
+	var modifyChips = exports.modifyChips = function modifyChips(chips) {
+	    return {
+	        type: MODIFY_CHIPS,
+	        chips: chips
+	    };
+	};
+
+/***/ },
+/* 308 */
+/*!**********************************************!*\
+  !*** ./client/react/action-creators/bets.js ***!
+  \**********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var LOG_BET = 'LOG_BET';
+	var MODIFY_CHIPS = 'MODIFY_CHIPS';
+	
+	var logBet = exports.logBet = function logBet(bet) {
+	    return {
+	        type: LOG_BET,
+	        bet: bet
 	    };
 	};
 
@@ -32607,7 +32634,7 @@
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 307);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32681,7 +32708,7 @@
 	
 	var _DeleteAccountButton2 = _interopRequireDefault(_DeleteAccountButton);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 307);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	

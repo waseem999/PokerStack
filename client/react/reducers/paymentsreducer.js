@@ -1,5 +1,6 @@
 
 const LOAD_USER = 'LOAD_USER';
+const MODIFY_CHIPS = 'MODIFY_CHIPS';
 const DELETE_USER = 'DELETE_USER';
 
 const initialState = { 
@@ -15,6 +16,10 @@ export default function userReducer (state = initialState, action) {
 
     case DELETE_USER:
       return Object.assign({}, state, initialState);
+      break;
+    
+    case MODIFY_CHIPS:
+      return Object.assign({}, state, {chips: action.chips});
       break;
 
     default: 

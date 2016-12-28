@@ -1,5 +1,6 @@
 const LOAD_USER= 'LOAD_USER';
 const DELETE_USER= 'DELETE_USER';
+const MODIFY_CHIPS = 'MODIFY_CHIPS';
 import axios from 'axios';
 
 export const loadUser = (user, chips) => {
@@ -22,10 +23,14 @@ export const getUser = () => {
   };
 };
 
-
 export const deleteUser = () => {
 return {
     type: DELETE_USER
     }
 };
+
+export const modifyChips =chips => ({
+    type: MODIFY_CHIPS,
+    chips
+});
 

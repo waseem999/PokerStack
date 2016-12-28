@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '../store';
 import {connect} from 'react-redux';
 import GameClass from '../components/GameClass';
-import { getUser, deleteUser } from '../action-creators/payments';
+import { getUser, deleteUser, modifyChips } from '../action-creators/payments';
 import { logBet } from '../action-creators/bets';
 
 
@@ -19,13 +19,14 @@ function mapStateToProps(state){
 }
   
 function mapDispatchToProps(dispatch){
+
       return {
         eraseUserFunction: function(){
-          dispatch(deleteUser)
+          dispatch()
         },
 
-        getUserFunction: function(){
-          dispatch(getUser())
+        modifyUserChips: function(chips){
+          dispatch(modifyChips(chips))
         },
 
         logBetAmount: function(bet){
