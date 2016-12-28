@@ -2,9 +2,7 @@
 const LOG_BET = 'LOG_BET';
 
 const initialState = { 
-    potsize: 0,
-    playeronechips: 0,
-    playertwochips: 0
+    potsize: 0
   };
 
 export default function betReducer (state = initialState, action) {

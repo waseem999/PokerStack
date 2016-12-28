@@ -64,13 +64,13 @@ render(){
                   <input
                     onChange={this.handleChange}
                     value={this.state.password}
-                    type="text"
+                    type="password"
                     className="form-control"
                     id="password"
                     placeholder="Password"/>
                 </div>
                   <button type="submit" className="btn btn-primary" 
-                  onClick={ () => {location.href = '/payments'}}>Login</button>         
+                  onClick={ () => {location.href = '/'}}>Login</button>         
               </form>
             </div>
           </div>

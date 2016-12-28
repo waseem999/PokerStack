@@ -8,21 +8,27 @@ const User = models.User;
 
 
 router.post('/', (req, res, next) => {
+let currentuser;
    User.findOne({
        where : {
-           username: req.body.username,
-           password: req.body.password
+           username: req.body.username
        }
    })
    .then(user => {
-       if (!user){
-           var error = new Error("No Username Found");
-           throw error;
-       }
-    req.session.userId = user.id;
-    req.session.name = user.username;
-    res.json(user);
+       currentuser = user;
+        if (!user){
+            var error = new Error("No Username Found");
+            throw error;
+        }
+            else {
+                return user.checkPassword(req.body.password)
+            }
    })
+   .then(() => {
+        req.session.userId = currentuser.id;
+        req.session.name = currentuser.username;
+        res.json(currentuser);
+    })
     .catch(next);
 })
 

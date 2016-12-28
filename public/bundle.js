@@ -81,17 +81,17 @@
 	
 	var _GameContainer2 = _interopRequireDefault(_GameContainer);
 	
-	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 307);
+	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 309);
 	
 	var _LeaderboardContainer2 = _interopRequireDefault(_LeaderboardContainer);
 	
-	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 310);
+	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 312);
 	
 	var _PaymentContainer2 = _interopRequireDefault(_PaymentContainer);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _payments = __webpack_require__(/*! ./action-creators/payments */ 315);
+	var _payments = __webpack_require__(/*! ./action-creators/payments */ 308);
 	
 	var _store = __webpack_require__(/*! ./store */ 261);
 	
@@ -30967,9 +30967,7 @@
 	var LOG_BET = 'LOG_BET';
 	
 	var initialState = {
-	  potsize: 0,
-	  playeronechips: 0,
-	  playertwochips: 0
+	  potsize: 0
 	};
 	
 	function betReducer() {
@@ -31044,7 +31042,6 @@
 	
 	  switch (action.type) {
 	    case LOAD_USER:
-	      console.log("ACTIONUSER", action.user);
 	      return Object.assign({}, state, { chips: action.chips, user: action.user });
 	      break;
 	
@@ -31935,7 +31932,7 @@
 	    _react2.default.createElement(
 	      _reactRouter.Link,
 	      { type: 'button', className: 'btn btn-danger', to: '/game' },
-	      'join table!'
+	      'JOIN GAME!'
 	    )
 	  );
 	};
@@ -32073,7 +32070,7 @@
 	                _react2.default.createElement('input', {
 	                  onChange: this.handleChange,
 	                  value: this.state.password,
-	                  type: 'text',
+	                  type: 'password',
 	                  className: 'form-control',
 	                  id: 'password',
 	                  placeholder: 'Password' })
@@ -32082,7 +32079,7 @@
 	                'button',
 	                { type: 'submit', className: 'btn btn-primary',
 	                  onClick: function onClick() {
-	                    location.href = '/payments';
+	                    location.href = '/';
 	                  } },
 	                'Login'
 	              )
@@ -32111,6 +32108,71 @@
 	  value: true
 	});
 	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _store = __webpack_require__(/*! ../store */ 261);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
+	
+	var _GameClass = __webpack_require__(/*! ../components/GameClass */ 306);
+	
+	var _GameClass2 = _interopRequireDefault(_GameClass);
+	
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	
+	var _bets = __webpack_require__(/*! ../action-creators/bets */ 307);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function mapStateToProps(state) {
+	  var chips = state.payments.chips;
+	  var user = state.payments.user;
+	  var potsize = state.bets.potsize;
+	
+	  return {
+	    chips: chips, user: user, potsize: potsize
+	  };
+	}
+	
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    eraseUserFunction: function eraseUserFunction() {
+	      dispatch(_payments.deleteUser);
+	    },
+	
+	    getUserFunction: function getUserFunction() {
+	      dispatch((0, _payments.getUser)());
+	    },
+	
+	    logBetAmount: function logBetAmount(bet) {
+	      dispatch((0, _bets.logBet)(bet));
+	    }
+	  };
+	}
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_GameClass2.default);
+
+/***/ },
+/* 306 */
+/*!**********************************************!*\
+  !*** ./client/react/components/GameClass.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(/*! react */ 1);
@@ -32125,7 +32187,7 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _bets = __webpack_require__(/*! ../action-creators/bets */ 306);
+	var _bets = __webpack_require__(/*! ../action-creators/bets */ 307);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32162,18 +32224,23 @@
 	  }, {
 	    key: 'getBetAmount',
 	    value: function getBetAmount(betvalue) {
-	      _store2.default.dispatch((0, _bets.logBet)(betvalue));
+	      var bet = parseInt(betvalue);
+	      _store2.default.dispatch((0, _bets.logBet)(bet));
 	    }
 	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(e) {
 	      e.preventDefault();
 	      var betvalue = this.state.inputValue;
-	      this.getBetAmount(betvalue);
+	      var bet = parseInt(betvalue);
+	      this.props.logBetAmount(bet);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var user = this.props.user;
+	      var chips = this.props.chips;
+	      var potsize = this.props.potsize;
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
@@ -32188,51 +32255,64 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-xs-4 col-sm-4' },
+	          { className: 'col-xs-12 col-sm-12' },
 	          _react2.default.createElement(
 	            'form',
-	            { onSubmit: this.handleSubmit },
+	            { onSubmit: this.handleSubmit, className: 'form-inline' },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'form-group' },
 	              _react2.default.createElement(
 	                'label',
-	                { htmlFor: 'bet' },
+	                { className: 'sr-only', htmlFor: 'bet' },
 	                'Bet'
 	              ),
-	              _react2.default.createElement('input', {
-	                type: 'text',
-	                className: 'form-control',
-	                onChange: this.handleChange,
-	                id: 'bet',
-	                value: this.state.inputValue,
-	                placeholder: 'Bet Amount' })
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'input-group' },
+	                _react2.default.createElement('input', {
+	                  type: 'text',
+	                  className: 'form-control',
+	                  onChange: this.handleChange,
+	                  id: 'bet',
+	                  value: this.state.inputValue,
+	                  placeholder: 'Bet Amount' })
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'button',
 	              { type: 'submit', className: 'btn-sm btn-primary' },
 	              'Bet'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn-sm btn-primary' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'hidden-xs' },
+	                'Deal Cards'
+	              )
 	            )
 	          )
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn-sm btn-primary' },
-	          _react2.default.createElement('i', { className: 'icon icon-font' }),
+	          'div',
+	          null,
 	          _react2.default.createElement(
-	            'span',
-	            { className: 'hidden-xs' },
-	            'Check'
+	            'strong',
+	            null,
+	            'Pot Size: ',
+	            potsize
 	          )
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn-sm btn-primary' },
-	          _react2.default.createElement('i', { className: 'icon icon-font' }),
+	          'div',
+	          null,
 	          _react2.default.createElement(
-	            'span',
-	            { className: 'hidden-xs' },
-	            'Fold'
+	            'strong',
+	            null,
+	            'Your Chip Balance: ',
+	            chips
 	          )
 	        )
 	      );
@@ -32246,7 +32326,7 @@
 	;
 
 /***/ },
-/* 306 */
+/* 307 */
 /*!**********************************************!*\
   !*** ./client/react/action-creators/bets.js ***!
   \**********************************************/
@@ -32267,7 +32347,55 @@
 	};
 
 /***/ },
-/* 307 */
+/* 308 */
+/*!**************************************************!*\
+  !*** ./client/react/action-creators/payments.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
+	
+	var _axios = __webpack_require__(/*! axios */ 236);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LOAD_USER = 'LOAD_USER';
+	var DELETE_USER = 'DELETE_USER';
+	var loadUser = exports.loadUser = function loadUser(user, chips) {
+	    return {
+	        type: LOAD_USER,
+	        user: user,
+	        chips: chips
+	    };
+	};
+	
+	var getUser = exports.getUser = function getUser() {
+	    return function (dispatch) {
+	        _axios2.default.get("/api/payments").then(function (response) {
+	            var username = response.data[0].user.username;
+	            var chips = response.data[0].chiptotal;
+	            dispatch(loadUser(username, chips));
+	        }).catch(function (error) {
+	            return console.error(error);
+	        });
+	    };
+	};
+	
+	var deleteUser = exports.deleteUser = function deleteUser() {
+	    return {
+	        type: DELETE_USER
+	    };
+	};
+
+/***/ },
+/* 309 */
 /*!*********************************************************!*\
   !*** ./client/react/containers/LeaderboardContainer.js ***!
   \*********************************************************/
@@ -32293,11 +32421,11 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 308);
+	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 310);
 	
 	var _Leaderboard2 = _interopRequireDefault(_Leaderboard);
 	
-	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 309);
+	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 311);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32320,7 +32448,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Leaderboard2.default);
 
 /***/ },
-/* 308 */
+/* 310 */
 /*!************************************************!*\
   !*** ./client/react/components/Leaderboard.js ***!
   \************************************************/
@@ -32407,7 +32535,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 309 */
+/* 311 */
 /*!*****************************************************!*\
   !*** ./client/react/action-creators/leaderboard.js ***!
   \*****************************************************/
@@ -32445,7 +32573,7 @@
 	};
 
 /***/ },
-/* 310 */
+/* 312 */
 /*!*****************************************************!*\
   !*** ./client/react/containers/PaymentContainer.js ***!
   \*****************************************************/
@@ -32471,15 +32599,15 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 311);
+	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 313);
 	
 	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
 	
-	var _Payments = __webpack_require__(/*! ../components/Payments.jsx */ 312);
+	var _Payments = __webpack_require__(/*! ../components/Payments.jsx */ 314);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 315);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32507,7 +32635,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PaymentsClass2.default);
 
 /***/ },
-/* 311 */
+/* 313 */
 /*!**************************************************!*\
   !*** ./client/react/components/PaymentsClass.js ***!
   \**************************************************/
@@ -32535,7 +32663,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 312);
+	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 314);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
@@ -32545,15 +32673,15 @@
 	
 	var _Navbar2 = _interopRequireDefault(_Navbar);
 	
-	var _PurchaseChips = __webpack_require__(/*! ./PurchaseChips */ 313);
+	var _PurchaseChips = __webpack_require__(/*! ./PurchaseChips */ 315);
 	
 	var _PurchaseChips2 = _interopRequireDefault(_PurchaseChips);
 	
-	var _DeleteAccountButton = __webpack_require__(/*! ./DeleteAccountButton */ 314);
+	var _DeleteAccountButton = __webpack_require__(/*! ./DeleteAccountButton */ 316);
 	
 	var _DeleteAccountButton2 = _interopRequireDefault(_DeleteAccountButton);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 315);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32689,7 +32817,7 @@
 	exports.default = _class;
 
 /***/ },
-/* 312 */
+/* 314 */
 /*!**********************************************!*\
   !*** ./client/react/components/Payments.jsx ***!
   \**********************************************/
@@ -32780,7 +32908,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 313 */
+/* 315 */
 /*!**************************************************!*\
   !*** ./client/react/components/PurchaseChips.js ***!
   \**************************************************/
@@ -32846,7 +32974,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 314 */
+/* 316 */
 /*!********************************************************!*\
   !*** ./client/react/components/DeleteAccountButton.js ***!
   \********************************************************/
@@ -32880,54 +33008,6 @@
 	var _axios2 = _interopRequireDefault(_axios);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 315 */
-/*!**************************************************!*\
-  !*** ./client/react/action-creators/payments.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.deleteUser = exports.getUser = exports.loadUser = undefined;
-	
-	var _axios = __webpack_require__(/*! axios */ 236);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var LOAD_USER = 'LOAD_USER';
-	var DELETE_USER = 'DELETE_USER';
-	var loadUser = exports.loadUser = function loadUser(user, chips) {
-	    return {
-	        type: LOAD_USER,
-	        user: user,
-	        chips: chips
-	    };
-	};
-	
-	var getUser = exports.getUser = function getUser() {
-	    return function (dispatch) {
-	        _axios2.default.get("/api/payments").then(function (response) {
-	            var username = response.data[0].user.username;
-	            var chips = response.data[0].chiptotal;
-	            dispatch(loadUser(username, chips));
-	        }).catch(function (error) {
-	            return console.error(error);
-	        });
-	    };
-	};
-	
-	var deleteUser = exports.deleteUser = function deleteUser() {
-	    return {
-	        type: DELETE_USER
-	    };
-	};
 
 /***/ }
 /******/ ]);

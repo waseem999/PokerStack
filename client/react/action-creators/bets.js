@@ -4,3 +4,5 @@ export const logBet = bet => ({
     type: LOG_BET,
     bet
 });
+
+

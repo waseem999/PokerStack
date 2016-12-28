@@ -7,7 +7,7 @@ const cards = require('./cards');
 
 
 
-User.belongsTo(Chips);
+User.hasOne(Chips);
 Chips.belongsTo(User);
 User.hasMany(Payments);
 

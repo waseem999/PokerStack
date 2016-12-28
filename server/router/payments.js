@@ -16,7 +16,6 @@ router.get('/', (req, res, next) => {
       include: [User]
   })
     .then(user => {
-      console.log("USER??", user)
     res.json(user)})
   .catch(next);
 });

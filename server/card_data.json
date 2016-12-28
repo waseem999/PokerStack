@@ -419,8 +419,8 @@
             "model": "User",
             "data": {
                 "username": "Isildur",
-                "password": "isildur",
-                "chipId": 1
+                "password": "isildur"
+                
             }
         },
         {
@@ -434,7 +434,8 @@
             "model": "Payments",
             "data": {
                 "paymentType": "VISA",
-                "accountNumber": "3240150323887712"
+                "accountNumber": "3240150323887712",
+                "userId": 1
             }
         }
 
