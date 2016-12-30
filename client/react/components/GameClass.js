@@ -97,8 +97,8 @@ switch (playerhandstrength) {
         }
     else {
         result = "You have 3 of a kind, you win!";
-        this.props.logBetAmount(0);
         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        this.props.logBetAmount(0);
       }
         break;
     case 2:
@@ -111,8 +111,8 @@ switch (playerhandstrength) {
         }
     else {
         result = "You have a pair, you win!";
-        this.props.logBetAmount(0);
         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        this.props.logBetAmount(0);
       }
         break;
     case 1:
