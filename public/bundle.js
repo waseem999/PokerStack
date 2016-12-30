@@ -120,7 +120,7 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/leaderboard', component: _LeaderboardContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/payments', component: _PaymentContainer2.default, onEnter: loadUserOnEnter }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/game', component: _GameContainer2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/game', component: _GameContainer2.default, onEnter: loadUserOnEnter })
 	    )
 	  )
 	);
@@ -31906,7 +31906,7 @@
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'App-header' },
-	      _react2.default.createElement('img', { src: "/stylesheets/card.png", className: 'App-logo', alt: 'logo' }),
+	      _react2.default.createElement('img', { src: "/stylesheets/playingcards/ace_of_hearts.png", className: 'App-logo', alt: 'logo' }),
 	      _react2.default.createElement(
 	        'h2',
 	        null,
@@ -32213,10 +32213,16 @@
 	
 	    _this.state = {
 	      inputValue: 0,
-	      lowerbet: false
+	      lowerbet: false,
+	      communitycards: [],
+	      yourcards: [],
+	      villaincards: [],
+	      result: ""
 	    };
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.dealCards = _this.dealCards.bind(_this);
+	    _this.evaluateCards = _this.evaluateCards.bind(_this);
 	    return _this;
 	  }
 	
@@ -32238,7 +32244,9 @@
 	        this.setState({
 	          lowerbet: true
 	        });
-	        this.state.inputValue = 0;
+	        this.setState({
+	          inputValue: 0
+	        });
 	      } else {
 	        this.setState({
 	          lowerbet: false
@@ -32246,7 +32254,102 @@
 	        this.props.logBetAmount(bet);
 	        reducedbet = this.props.chips - bet;
 	        this.props.modifyUserChips(reducedbet);
+	        this.setState({
+	          inputValue: 0
+	        });
 	      }
+	    }
+	  }, {
+	    key: 'evaluateCards',
+	    value: function evaluateCards() {
+	      var playerhand = this.state.yourcards.concat(this.state.communitycards);
+	      var villainhand = this.state.villaincards.concat(this.state.communitycards);
+	      var playerhandstrengtharray = [];
+	      var playerhandstrength = 1;
+	      var villainhandstrength = 1;
+	      var result = "";
+	
+	      var _loop = function _loop(i) {
+	        var playerhandfilter = playerhand.filter(function (val, index) {
+	          return val.face === playerhand[i].face;
+	        });
+	        playerhandfilter.length > 1 ? playerhandstrength = playerhandfilter.length : null;
+	      };
+	
+	      for (var i = 0; i < 5; i++) {
+	        _loop(i);
+	      }
+	
+	      var _loop2 = function _loop2(_i) {
+	        var villainhandfilter = villainhand.filter(function (val, index) {
+	          return val.face === villainhand[_i].face;
+	        });
+	        villainhandfilter.length > 1 ? villainhandstrength = villainhandfilter.length : null;
+	      };
+	
+	      for (var _i = 0; _i < 5; _i++) {
+	        _loop2(_i);
+	      }
+	      switch (playerhandstrength) {
+	        case 4:
+	          if (villainhandstrength === 4) {
+	            result = "tie!";
+	          } else {
+	            result = "You have 4 of a kind, you win!";
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	          }
+	          break;
+	        case 3:
+	          if (villainhandstrength === 3) {
+	            result = "tie!";
+	          } else if (villainhandstrength > 3) {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          } else {
+	            result = "You have 3 of a kind, you win!";
+	            this.props.logBetAmount(0);
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	          }
+	          break;
+	        case 2:
+	          if (villainhandstrength === 2) {
+	            result = "tie!";
+	          } else if (villainhandstrength > 2) {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          } else {
+	            result = "You have a pair, you win!";
+	            this.props.logBetAmount(0);
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	          }
+	          break;
+	        case 1:
+	          if (villainhandstrength === 1) {
+	            result = "tie!";
+	          } else {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          }
+	          break;
+	      }
+	      this.setState({
+	        result: result
+	      });
+	    }
+	  }, {
+	    key: 'dealCards',
+	    value: function dealCards(e) {
+	      var _this2 = this;
+	
+	      _axios2.default.get('/api/game').then(function (cards) {
+	        _this2.setState({
+	          yourcards: cards.data.slice(0, 2),
+	          villaincards: cards.data.slice(2, 4),
+	          communitycards: cards.data.slice(4)
+	        });
+	      }).then(function () {
+	        _this2.evaluateCards();
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -32254,6 +32357,7 @@
 	      var user = this.props.user;
 	      var chips = this.props.chips;
 	      var potsize = this.props.potsize;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
@@ -32296,15 +32400,6 @@
 	              'button',
 	              { type: 'submit', className: 'btn-sm btn-custom' },
 	              'Bet'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn-sm btn-custom' },
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'hidden-xs' },
-	                'Deal Cards'
-	              )
 	            )
 	          )
 	        ),
@@ -32329,8 +32424,101 @@
 	          _react2.default.createElement(
 	            'strong',
 	            null,
-	            'Your Chip Balance: ',
+	            user,
+	            ' Chip Balance: ',
 	            chips
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'btn-sm btn-custom', onClick: this.dealCards },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'hidden-xs' },
+	            'Deal Cards'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.state.yourcards[0] && _react2.default.createElement(
+	            'table',
+	            { width: '700' },
+	            _react2.default.createElement(
+	              'thead',
+	              null,
+	              _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Your Cards'
+	                ),
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Villain\'s Cards'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tbody',
+	              null,
+	              _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'td',
+	                  null,
+	                  _react2.default.createElement('img', { src: this.state.yourcards[0].image, className: 'Image-logo' }),
+	                  _react2.default.createElement('img', { src: this.state.yourcards[1].image, className: 'Image-logo' })
+	                ),
+	                _react2.default.createElement(
+	                  'td',
+	                  null,
+	                  _react2.default.createElement('img', { src: this.state.villaincards[0].image, className: 'Image-logo' }),
+	                  _react2.default.createElement('img', { src: this.state.villaincards[1].image, className: 'Image-logo' })
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'thead',
+	              null,
+	              _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Community Cards'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tbody',
+	              null,
+	              _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'td',
+	                  null,
+	                  _react2.default.createElement('img', { src: this.state.communitycards[0].image, className: 'Image-logo' }),
+	                  _react2.default.createElement('img', { src: this.state.communitycards[1].image, className: 'Image-logo' }),
+	                  _react2.default.createElement('img', { src: this.state.communitycards[2].image, className: 'Image-logo' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                  'h2',
+	                  null,
+	                  this.state.result
+	                )
+	              )
+	            )
 	          )
 	        )
 	      );
@@ -32412,7 +32600,6 @@
 	    value: true
 	});
 	var LOG_BET = 'LOG_BET';
-	var MODIFY_CHIPS = 'MODIFY_CHIPS';
 	
 	var logBet = exports.logBet = function logBet(bet) {
 	    return {

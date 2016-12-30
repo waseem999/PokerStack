@@ -8,12 +8,14 @@ const users = require('./users');
 const leaderboard = require('./leaderboard');
 const payments = require('./payments');
 const login = require('./login');
+const game = require ('./game');
 
 
 router.use('/users', users);
 router.use('/leaderboard', leaderboard);
 router.use('/payments', payments);
 router.use('/login', login);
+router.use('/game', game);
 
 router.use(function (req, res) {
   res.status(404).end();

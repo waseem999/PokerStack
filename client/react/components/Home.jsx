@@ -8,7 +8,7 @@ const Home = () => (
       <div className="App">
         <Navbar/>
         <div className="App-header">
-          <img src={"/stylesheets/card.png"} className="App-logo" alt="logo" />
+          <img src={"/stylesheets/playingcards/ace_of_hearts.png"} className="App-logo" alt="logo" />
           <h2>Let's Play Poker!</h2>
         </div>
         <div>

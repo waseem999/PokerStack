@@ -29,7 +29,7 @@ const rootRouter =
           <Route path="/login" component={LoginClass} />
           <Route path="/leaderboard" component={Leaderboard} />
           <Route path="/payments" component={PaymentContainer} onEnter={loadUserOnEnter}/>
-          <Route path="/game" component={Game} />
+          <Route path="/game" component={Game} onEnter={loadUserOnEnter}/>
         </Route>
       </Router>
   </Provider>;

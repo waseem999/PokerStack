@@ -22,7 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var session = require('express-session');
 
 app.use(session({
-  secret: 'pokersecret' 
+  secret: 'pokersecret',
+  resave: false
 }));
 
 app.use('/api', function (req, res, next) {

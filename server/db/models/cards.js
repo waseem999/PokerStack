@@ -14,6 +14,33 @@ module.exports = db.define('cards', {
     suit: {
          type: Sequelize.STRING
 
+     },
+
+     image: {
+         type: Sequelize.STRING
      }
 
-}, {})
+}, {
+    classMethods : {
+        getRandomCards: function () {
+        let cardsarr = [];
+        let numberarray = [];
+        let i = 0;
+        while (i < 7){
+        let randomNumber = Math.ceil((Math.random()*52));
+                if (numberarray.indexOf(randomNumber) === -1){
+                    numberarray.push(randomNumber);
+                    let newcard = this.findOne({
+                        where: {
+                            id : randomNumber
+                            }
+                        });
+                    cardsarr.push(newcard);
+                    i++;
+                }
+            }
+            return Promise.all(cardsarr);
+        
+        }
+    }
+})

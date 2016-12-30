@@ -4,7 +4,8 @@
             "data": {
                 "value": 2,
                 "face": "two",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/2_of_spades.png"
             }
         },
         {
@@ -12,7 +13,8 @@
             "data": {
                 "value": 2,
                 "face": "two",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "stylesheets/playingcards/2_of_hearts.png"
             }
         },
         {
@@ -20,7 +22,8 @@
             "data": {
                 "value": 2,
                 "face": "two",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/2_of_clubs.png"
             }
         },
         {
@@ -28,7 +31,8 @@
             "data": {
                 "value": 2,
                 "face": "two",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/2_of_diamonds.png"
             }
         },
         {
@@ -36,7 +40,8 @@
             "data": {
                 "value": 3,
                 "face": "three",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/3_of_spades.png"
             }
         },
         {
@@ -44,7 +49,8 @@
             "data": {
                 "value": 3,
                 "face": "three",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/3_of_hearts.png"
             }
         },
         {
@@ -52,7 +58,8 @@
             "data": {
                 "value": 3,
                 "face": "three",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/3_of_clubs.png"
             }
         },
         {
@@ -60,7 +67,8 @@
             "data": {
                 "value": 3,
                 "face": "three",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/3_of_diamonds.png"
             }
         },
         {
@@ -68,7 +76,8 @@
             "data": {
                 "value": 4,
                 "face": "four",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/4_of_spades.png"
             }
         },
         {
@@ -76,7 +85,8 @@
             "data": {
                 "value": 4,
                 "face": "four",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/4_of_hearts.png"
             }
         },
         {
@@ -84,7 +94,8 @@
             "data": {
                 "value": 4,
                 "face": "four",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/4_of_clubs.png"
             }
         },
         {
@@ -92,7 +103,8 @@
             "data": {
                 "value": 4,
                 "face": "four",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/4_of_diamonds.png"
             }
         },
         {
@@ -100,7 +112,8 @@
             "data": {
                 "value": 5,
                 "face": "five",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/5_of_spades.png"
             }
         },
         {
@@ -108,7 +121,8 @@
             "data": {
                 "value": 5,
                 "face": "five",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/5_of_hearts.png"
             }
         },
         {
@@ -116,7 +130,8 @@
             "data": {
                 "value": 5,
                 "face": "five",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/5_of_clubs.png"
             }
         },
         {
@@ -124,7 +139,8 @@
             "data": {
                 "value": 5,
                 "face": "five",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/5_of_diamonds.png"
             }
         },
         {
@@ -132,7 +148,8 @@
             "data": {
                 "value": 6,
                 "face": "six",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/6_of_spades.png"
             }
         },
         {
@@ -140,7 +157,8 @@
             "data": {
                 "value": 6,
                 "face": "six",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/6_of_hearts.png"
             }
         },
         {
@@ -148,7 +166,8 @@
             "data": {
                 "value": 6,
                 "face": "six",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/6_of_clubs.png"
             }
         },
         {
@@ -156,7 +175,8 @@
             "data": {
                 "value": 6,
                 "face": "six",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/6_of_diamonds.png"
             }
         },
         {
@@ -164,7 +184,8 @@
             "data": {
                 "value": 7,
                 "face": "seven",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/7_of_spades.png"
             }
         },
         {
@@ -172,7 +193,8 @@
             "data": {
                 "value": 7,
                 "face": "seven",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/7_of_hearts.png"
             }
         },
         {
@@ -180,7 +202,8 @@
             "data": {
                 "value": 7,
                 "face": "seven",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/7_of_clubs.png"
             }
         },
         {
@@ -188,7 +211,8 @@
             "data": {
                 "value": 7,
                 "face": "seven",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/7_of_diamonds.png"
             }
         },
         {
@@ -196,7 +220,8 @@
             "data": {
                 "value": 8,
                 "face": "eight",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/8_of_spades.png"
             }
         },
         {
@@ -204,7 +229,8 @@
             "data": {
                 "value": 8,
                 "face": "eight",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/8_of_hearts.png"
             }
         },
         {
@@ -212,7 +238,8 @@
             "data": {
                 "value": 8,
                 "face": "eight",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/8_of_clubs.png"
             }
         },
         {
@@ -220,7 +247,8 @@
             "data": {
                 "value": 8,
                 "face": "eight",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/8_of_diamonds.png"
             }
         },
         {
@@ -228,7 +256,8 @@
             "data": {
                 "value": 9,
                 "face": "nine",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/9_of_spades.png"
             }
         },
         {
@@ -236,7 +265,8 @@
             "data": {
                 "value": 9,
                 "face": "nine",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/9_of_hearts.png"
             }
         },
         {
@@ -244,7 +274,8 @@
             "data": {
                 "value": 9,
                 "face": "nine",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/9_of_clubs.png"
             }
         },
         {
@@ -252,7 +283,8 @@
             "data": {
                 "value": 9,
                 "face": "nine",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/9_of_diamonds.png"
             }
         },
         {
@@ -260,7 +292,8 @@
             "data": {
                 "value": 10,
                 "face": "ten",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/10_of_spades.png"
             }
         },
         {
@@ -268,7 +301,8 @@
             "data": {
                 "value": 10,
                 "face": "ten",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/10_of_hearts.png"
             }
         },
         {
@@ -276,7 +310,8 @@
             "data": {
                 "value": 10,
                 "face": "ten",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/10_of_clubs.png"
             }
         },
         {
@@ -284,135 +319,152 @@
             "data": {
                 "value": 10,
                 "face": "ten",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/10_of_diamonds.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 11,
                 "face": "jack",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/jack_of_spades.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 11,
                 "face": "jack",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/jack_of_hearts.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 11,
                 "face": "jack",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/jack_of_clubs.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 11,
                 "face": "jack",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/jack_of_diamonds.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 12,
                 "face": "queen",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/queen_of_spades.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 12,
                 "face": "queen",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/queen_of_hearts.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 12,
                 "face": "queen",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/queen_of_clubs.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 12,
                 "face": "queen",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/queen_of_diamonds.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 13,
                 "face": "king",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/king_of_spades.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 13,
                 "face": "king",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/king_of_hearts.png"
             }
         },
          {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 13,
                 "face": "king",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/king_of_clubs.png"
             }
         },
          {
             "model": "cards",
             "data": {
-                "value": 10,
+                "value": 13,
                 "face": "king",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/king_of_diamonds.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 11,
+                "value": 14,
                 "face": "ace",
-                "suit": "spades"
+                "suit": "spades",
+                "image": "/stylesheets/playingcards/ace_of_spades.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 11,
+                "value": 14,
                 "face": "ace",
-                "suit": "hearts"
+                "suit": "hearts",
+                "image": "/stylesheets/playingcards/ace_of_hearts.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 11,
+                "value": 14,
                 "face": "ace",
-                "suit": "clubs"
+                "suit": "clubs",
+                "image": "/stylesheets/playingcards/ace_of_clubs.png"
             }
         },
         {
             "model": "cards",
             "data": {
-                "value": 11,
+                "value": 14,
                 "face": "ace",
-                "suit": "diamonds"
+                "suit": "diamonds",
+                "image": "/stylesheets/playingcards/ace_of_diamonds.png"
             }
         },
         {
