@@ -15,6 +15,7 @@ const Payments = models.Payments;
 const Chips = models.Chips;
 const Users = models.User;
 const Cards = models.cards;
+const Log = models.log;
 
 
 app.use(bodyParser.json());
@@ -55,6 +56,7 @@ Cards.sync({}).then(sequelize_fixtures.loadFile('server/card_data.json', models)
 .then(Users.sync({})
     .then(()=> Chips.sync({}))
     .then(()=>Payments.sync({}))
+    .then(()=> Log.sync({}))
     .then(function () {
         app.listen(3001, function () {
             console.log('Server is listening on port 3001!');

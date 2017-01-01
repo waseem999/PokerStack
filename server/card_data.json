@@ -469,9 +469,10 @@
         },
         {
             "model": "User",
+             "keys": ["username"],
             "data": {
-                "username": "Isildur",
-                "password": "isildur"
+                "username": "Phil_Ivey",
+                "password": "phil"
                 
             }
         },

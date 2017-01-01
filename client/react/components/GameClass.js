@@ -119,6 +119,10 @@ switch (playerhandstrength) {
         if (villainhandstrength===1){
           result = "tie!"
         }
+      else if (villainhandstrength===2){
+          result = "villain wins with a pair!";
+           this.props.logBetAmount(0);
+        }
       else {
           result = "villain wins!";
            this.props.logBetAmount(0);
@@ -145,8 +149,6 @@ switch (playerhandstrength) {
           this.evaluateCards();
         })
   }
-
-
 
 
  render() {
@@ -220,10 +222,12 @@ switch (playerhandstrength) {
                               </div>
                           </tbody>
                   </table>
-                     
                       )
-                 
                }
+            </div>
+            <div>
+            <button type="submit" className="btn-sm btn-custom" 
+                  onClick={ () => {location.href = '/'}}>Exit Game</button>   
             </div>
         </div>
 

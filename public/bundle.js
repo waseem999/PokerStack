@@ -32326,6 +32326,9 @@
 	        case 1:
 	          if (villainhandstrength === 1) {
 	            result = "tie!";
+	          } else if (villainhandstrength === 2) {
+	            result = "villain wins with a pair!";
+	            this.props.logBetAmount(0);
 	          } else {
 	            result = "villain wins!";
 	            this.props.logBetAmount(0);
@@ -32519,6 +32522,18 @@
 	                )
 	              )
 	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'submit', className: 'btn-sm btn-custom',
+	              onClick: function onClick() {
+	                location.href = '/';
+	              } },
+	            'Exit Game'
 	          )
 	        )
 	      );
