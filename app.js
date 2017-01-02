@@ -52,11 +52,12 @@ app.use(function (err, req, res, next){
 	res.status(500).send(err.message)
 });
 
-Cards.sync({}).then(sequelize_fixtures.loadFile('server/card_data.json', models))
-.then(Users.sync({})
+Users.sync({})
+.then(Cards.sync({})
     .then(()=> Chips.sync({}))
     .then(()=>Payments.sync({}))
     .then(()=> Log.sync({}))
+    .then(sequelize_fixtures.loadFile('server/card_data.json', models))
     .then(function () {
         app.listen(3001, function () {
             console.log('Server is listening on port 3001!');

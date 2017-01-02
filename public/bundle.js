@@ -923,12 +923,18 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 	
-	function invariant(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
+	var validateFormat = function validateFormat(format) {};
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  validateFormat = function validateFormat(format) {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
 	    }
-	  }
+	  };
+	}
+	
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  validateFormat(format);
 	
 	  if (!condition) {
 	    var error;
@@ -29335,8 +29341,7 @@
 	  if (value == null) {
 	    return value === undefined ? undefinedTag : nullTag;
 	  }
-	  value = Object(value);
-	  return (symToStringTag && symToStringTag in value)
+	  return (symToStringTag && symToStringTag in Object(value))
 	    ? getRawTag(value)
 	    : objectToString(value);
 	}
@@ -32280,15 +32285,15 @@
 	        _loop(i);
 	      }
 	
-	      var _loop2 = function _loop2(_i) {
+	      var _loop2 = function _loop2(i) {
 	        var villainhandfilter = villainhand.filter(function (val, index) {
-	          return val.face === villainhand[_i].face;
+	          return val.face === villainhand[i].face;
 	        });
 	        villainhandfilter.length > 1 ? villainhandstrength = villainhandfilter.length : null;
 	      };
 	
-	      for (var _i = 0; _i < 5; _i++) {
-	        _loop2(_i);
+	      for (var i = 0; i < 5; i++) {
+	        _loop2(i);
 	      }
 	      switch (playerhandstrength) {
 	        case 4:
