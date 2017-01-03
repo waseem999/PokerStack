@@ -62,7 +62,7 @@ router.delete('/', function (req, res, next) {
         }
       })
 
- Promise.all([
+  Promise.all([
    chipdestroy, paymentdestroy
   ])
     .then((res) => {
@@ -72,10 +72,11 @@ router.delete('/', function (req, res, next) {
                     }
                   })
     })
+    .then(() => {
+      req.session.destroy
+    })
   .catch(next);
 
 });
-
-
 
 module.exports = router;
