@@ -1,7 +1,7 @@
 # pokerapp
 
-***NOTE: This app is seeded with a full deck of cards and fake user.  Due to a bug, when npm.start is run for the first time, 
-the database does not seed properly. This resolves by running npm.start a second time.
+***NOTE: This app is seeded with a full deck of cards and fake user.  Due to a bug, when npm start is run for the first time, 
+the database does not seed properly. This resolves by running npm start a second time.
 
 This is a poker game app with user signup and login. Players start with 500 chips upon signup, with some random players 
 recieving 1000 chips.  The account management page allows users to add payment information, purchase additional chips, or delete their account.
