@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import store from '../store';
+import Preflop from './Preflop.jsx'
 
 
 
@@ -139,6 +140,7 @@ switch (playerhandstrength) {
 
     axios.get('/api/game')
         .then( (cards)=> {
+          console.log("CARDDDDS", cards)
           this.setState({
             yourcards: cards.data.slice(0, 2),
             villaincards: cards.data.slice(2, 4),
@@ -146,6 +148,7 @@ switch (playerhandstrength) {
           })
         })
         .then(()=> {
+          console.log("STATE", this.state);
           this.evaluateCards();
         })
   }
@@ -157,80 +160,21 @@ switch (playerhandstrength) {
    let potsize = this.props.potsize;
   
     return (
-      <div className="row">
-          <div className="col-xs-12 col-sm-12">
-            <h1>Poker</h1>
-          </div>
-          <div className="col-xs-12 col-sm-12">
-            <form onSubmit={this.handleSubmit} className="form-inline">
-              <div className="form-group">
-                <label className="sr-only" htmlFor="bet">Bet</label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      onChange={this.handleChange}
-                      id="bet"
-                      value={this.state.inputValue}
-                      placeholder="Bet Amount" />
-                    </div>
-              </div>
-                  <button type="submit" className="btn-sm btn-custom">Bet</button>
-            </form>
-          </div>
-          {
-            this.state.lowerbet ? <strong>REDUCE YOUR BET AMOUNT</strong> : null
-          }
-          <div>
-            <strong>Pot Size: {potsize}</strong>
-          </div>
-          <div>
-            <strong>{user} Chip Balance: {chips}</strong>
-          </div>
-                  <button className="btn-sm btn-custom" onClick={this.dealCards}>
-                      <span className="hidden-xs">Deal Cards</span>
-                  </button>
-                 
-            <div>
-               {
-               this.state.yourcards[0] && 
-                      (
-                       <table width="700">
-                          <thead>
-                                <tr>
-                                  <th>Your Cards</th>
-                                  <th>Villain's Cards</th>
-                                </tr>
-                          </thead>
-                          <tbody>
-                                  <tr>
-                                    <td><img src={this.state.yourcards[0].image} className="Image-logo"/><img src={this.state.yourcards[1].image} className="Image-logo"/></td>
-                                 
-                                    <td><img src={this.state.villaincards[0].image} className="Image-logo"/><img src={this.state.villaincards[1].image} className="Image-logo"/></td>
-                                  </tr>
-                          </tbody>
-                          <thead>
-                            <tr><strong>Community Cards</strong></tr>
-                          </thead>
-                          <tbody>
-                                <tr>
-                                    <td><img src={this.state.communitycards[0].image} className="Image-logo"/><img src={this.state.communitycards[1].image} className="Image-logo"/><img src={this.state.communitycards[2].image} className="Image-logo"/></td>
-                              </tr>
-                              
-                              <div>
-                                <h2>{this.state.result}</h2>
-                              </div>
-                          </tbody>
-                  </table>
-                      )
-               }
-            </div>
-            <div>
-            <button type="submit" className="btn-sm btn-custom" 
-                  onClick={ () => {location.href = '/'}}>Exit Game</button>   
-            </div>
-        </div>
-
+      <Preflop 
+        handleChange={this.handleChange}
+        handleSubmit={this.handleSubmit}
+        dealCards={this.dealCards}
+        evaluateCards={this.evaluateCards}
+        potsize={potsize}
+        chips={chips}
+        user={user}
+        inputValue={this.state.inputValue}
+        lowerbet={this.state.lowerbet}
+        communitycards={this.state.communitycards}
+        yourcards={this.state.yourcards}
+        villaincards={this.state.villaincards}
+        result={this.state.result}
+      />
     )
   }
 };
