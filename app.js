@@ -29,11 +29,6 @@ app.use('/api', function (req, res, next) {
   next();
 });
 
-app.use(function (req, res, next) {
-  console.log('session', req.session);
-  next();
-});
-
 app.set('view engine', 'html');
 
 app.use('/', express.static(path.join(__dirname, './public')));

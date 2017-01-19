@@ -12,13 +12,6 @@ router.get('/', (req, res, next) => {
     Cards.getRandomCards()
     .then(cards => {
     newcard = cards;
-
-     
-        Log.create({
-            cardId: cards[0].id,
-            userId : req.session.userId,
-            communitycards: [cards[4].id, cards[5].id, cards[6].id]
-        })
     })
     .then(() => 
     res.json(newcard))
