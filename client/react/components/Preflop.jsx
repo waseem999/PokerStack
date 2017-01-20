@@ -2,7 +2,7 @@ import React from 'react';
 
 
 export default function (props) {
-    console.log("PROPS", props)
+console.log("plaermove?", props.playerMove)
 return (
       <div className="row">
           <div className="col-xs-12 col-sm-12">
@@ -24,7 +24,10 @@ return (
               </div>
                   <button type="submit" className="btn-sm btn-custom">Bet</button>
             </form>
+                  <button type="submit" className="btn-sm btn-custom">Check</button>
+                  <button type="submit" className="btn-sm btn-custom">Fold</button>
           </div>
+          
           {
             props.lowerbet ? <strong>REDUCE YOUR BET AMOUNT</strong> : null
           }
@@ -34,8 +37,11 @@ return (
           <div>
             <strong>{props.user} Chip Balance: {props.chips}</strong>
           </div>
+          
+{props.playerMove ? (<div><strong>Your turn - Bet, Check or Fold</strong>
+</div>) : null}
                   <button className="btn-sm btn-custom" onClick={props.dealCards}>
-                      <span className="hidden-xs">Deal Cards</span>
+                      <span className="hidden-xs">New Game</span>
                   </button>
                  
             <div>
@@ -46,6 +52,7 @@ return (
                           <thead>
                                 <tr>
                                   <th>Your Cards</th>
+                                  <th>Villain Cards</th>
                                 </tr>
                           </thead>
                           <tbody>
@@ -54,18 +61,6 @@ return (
                                  
                                     <td><img src={props.villaincards[0].image} className="Image-logo"/><img src={props.villaincards[1].image} className="Image-logo"/></td>
                                   </tr>
-                          </tbody>
-                          <thead>
-                            <tr><strong>Community Cards</strong></tr>
-                          </thead>
-                          <tbody>
-                                <tr>
-                                    <td><img src={props.communitycards[0].image} className="Image-logo"/><img src={props.communitycards[1].image} className="Image-logo"/><img src={props.communitycards[2].image} className="Image-logo"/></td>
-                              </tr>
-                              
-                              <div>
-                                <h2>{props.result}</h2>
-                              </div>
                           </tbody>
                   </table>
                       )

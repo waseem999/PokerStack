@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import store from '../store';
-import Preflop from './Preflop.jsx'
+import Preflop from './Preflop.jsx';
+import Postflop from './Postflop.jsx'
 
 
 
@@ -13,10 +14,16 @@ export default class Game extends Component {
       inputValue: 0,
       lowerbet: false,
       communitycards: [],
+      turn: [],
+      river: [],
       yourcards: [],
       villaincards: [],
-      result : ""
+      result : "",
+      stage: "preflop",
+      playerMove : false,
+      showmovebuttons: false
     };
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.dealCards = this.dealCards.bind(this);
@@ -140,15 +147,16 @@ switch (playerhandstrength) {
 
     axios.get('/api/game')
         .then( (cards)=> {
-          console.log("CARDDDDS", cards)
-          this.setState({
-            yourcards: cards.data.slice(0, 2),
-            villaincards: cards.data.slice(2, 4),
-            communitycards: cards.data.slice(4)
+          this.setState(state => {
+          const newState = Object.assign({}, state, {yourcards: cards.data.slice(0, 2),
+          villaincards: cards.data.slice(2, 4),
+          communitycards: cards.data.slice(4),
+          playerMove: true
+          })
+          return newState;
           })
         })
         .then(()=> {
-          console.log("STATE", this.state);
           this.evaluateCards();
         })
   }
@@ -160,21 +168,38 @@ switch (playerhandstrength) {
    let potsize = this.props.potsize;
   
     return (
-      <Preflop 
-        handleChange={this.handleChange}
-        handleSubmit={this.handleSubmit}
-        dealCards={this.dealCards}
-        evaluateCards={this.evaluateCards}
-        potsize={potsize}
-        chips={chips}
-        user={user}
-        inputValue={this.state.inputValue}
-        lowerbet={this.state.lowerbet}
-        communitycards={this.state.communitycards}
-        yourcards={this.state.yourcards}
-        villaincards={this.state.villaincards}
-        result={this.state.result}
-      />
+      <div>
+        <Preflop 
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          dealCards={this.dealCards}
+          evaluateCards={this.evaluateCards}
+          potsize={potsize}
+          chips={chips}
+          user={user}
+          playerMove={this.state.playerMove}
+          inputValue={this.state.inputValue}
+          lowerbet={this.state.lowerbet}
+          communitycards={this.state.communitycards}
+          yourcards={this.state.yourcards}
+          villaincards={this.state.villaincards}
+          result={this.state.result}
+        />
+        {this.state.stage === "postflop" ? <Postflop handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          dealCards={this.dealCards}
+          evaluateCards={this.evaluateCards}
+          playerMove={this.state.playerMove}
+          potsize={potsize}
+          chips={chips}
+          user={user}
+          inputValue={this.state.inputValue}
+          lowerbet={this.state.lowerbet}
+          communitycards={this.state.communitycards}
+          yourcards={this.state.yourcards}
+          villaincards={this.state.villaincards}
+          result={this.state.result}/> : null}
+      </div>
     )
   }
 };
