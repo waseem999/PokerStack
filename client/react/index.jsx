@@ -12,18 +12,22 @@ import Game from './containers/GameContainer';
 import Leaderboard from './containers/LeaderboardContainer';
 import PaymentContainer from './containers/PaymentContainer';
 import { Provider } from 'react-redux';
-import {getUser} from './action-creators/payments';
+import {loadUser, modVillainChips} from './action-creators/payments';
 import store from './store';
 
 
 const loadUserOnEnter = function() {
-  store.dispatch(getUser());
+  store.dispatch(loadUser("user", 500))
+}
+
+const loadVillainOnEnter = function(){
+    store.dispatch(modVillainChips(500));
 }
 
 const rootRouter = 
   <Provider store={store}>
       <Router history={browserHistory} >
-        <Route path="/" component={App} >
+        <Route path="/" component={App} onEnter={loadVillainOnEnter} >
           <IndexRoute component={Home} />
           <Route path="/signup" component={SignupClass}/>
           <Route path="/login" component={LoginClass} />
