@@ -101,10 +101,14 @@
 	
 	/* global document */
 	var loadUserOnEnter = function loadUserOnEnter() {
-	  _store2.default.dispatch((0, _payments.getUser)());
+	  _store2.default.dispatch((0, _payments.loadUser)("user", 500));
 	};
 	//import Payment from './containers/PaymentContainer';
 	
+	
+	var loadVillainOnEnter = function loadVillainOnEnter() {
+	  _store2.default.dispatch((0, _payments.modVillainChips)(500));
+	};
 	
 	var rootRouter = _react2.default.createElement(
 	  _reactRedux.Provider,
@@ -114,7 +118,7 @@
 	    { history: _reactRouter.browserHistory },
 	    _react2.default.createElement(
 	      _reactRouter.Route,
-	      { path: '/', component: _App2.default },
+	      { path: '/', component: _App2.default, onEnter: loadVillainOnEnter },
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _SignupClass2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginClass2.default }),
@@ -31186,10 +31190,12 @@
 	var LOAD_USER = 'LOAD_USER';
 	var MODIFY_CHIPS = 'MODIFY_CHIPS';
 	var DELETE_USER = 'DELETE_USER';
+	var MODIFY_VILLAINCHIPS = "MODIFY_VILLAINCHIPS";
 	
 	var initialState = {
 	  chips: 0,
-	  user: ""
+	  user: "",
+	  villainchips: 500
 	};
 	
 	function userReducer() {
@@ -31207,6 +31213,10 @@
 	
 	    case MODIFY_CHIPS:
 	      return Object.assign({}, state, { chips: action.chips });
+	      break;
+	
+	    case MODIFY_VILLAINCHIPS:
+	      return Object.assign({}, state, { villainchips: action.chips });
 	      break;
 	
 	    default:
@@ -32075,17 +32085,7 @@
 	        _react2.default.createElement(
 	          'li',
 	          { className: 'list-group-item' },
-	          'Welcome to Poker Spot! When you register you start off with 500 chips.'
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          { className: 'list-group-item' },
-	          'One in 3 random lucky people start off with 1000 chips!'
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          { className: 'list-group-item' },
-	          'If your final score is above 750 you earn a spot on our Leaderboard for a chance to win some sort of prize!'
+	          'Welcome to Poker Stack!'
 	        )
 	      )
 	    ),
@@ -32296,9 +32296,10 @@
 	  var chips = state.payments.chips;
 	  var user = state.payments.user;
 	  var potsize = state.bets.potsize;
+	  var villainchips = state.payments.villainchips;
 	
 	  return {
-	    chips: chips, user: user, potsize: potsize
+	    chips: chips, user: user, potsize: potsize, villainchips: villainchips
 	  };
 	}
 	
@@ -32311,6 +32312,10 @@
 	
 	    modifyUserChips: function modifyUserChips(chips) {
 	      dispatch((0, _payments.modifyChips)(chips));
+	    },
+	
+	    modifyVillainChips: function modifyVillainChips(chips) {
+	      dispatch((0, _payments.modVillainChips)(chips));
 	    },
 	
 	    logBetAmount: function logBetAmount(bet) {
@@ -32383,11 +32388,16 @@
 	      result: "",
 	      stage: "preflop",
 	      playerMove: false,
-	      showmovebuttons: false
+	      showmovebuttons: false,
+	      currentBet: 0,
+	      villainAction: "",
+	      playerAction: "",
+	      playerhasActed: false
 	    };
 	
-	    _this.handleSubmit = _this.handleSubmit.bind(_this);
+	    _this.handleBet = _this.handleBet.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleCheck = _this.handleCheck.bind(_this);
 	    _this.dealCards = _this.dealCards.bind(_this);
 	    _this.evaluateCards = _this.evaluateCards.bind(_this);
 	    return _this;
@@ -32401,8 +32411,26 @@
 	      });
 	    }
 	  }, {
-	    key: 'handleSubmit',
-	    value: function handleSubmit(e) {
+	    key: 'handleCheck',
+	    value: function handleCheck(e) {
+	      // if(this.state.villainAction==="bet"){
+	      //   let call = this.props.currentBet;
+	      //   this.props.logBetAmount(bet);
+	      //   let reducedbet = this.props.chips - bet;
+	      //   this.props.modifyUserChips(reducedbet);
+	
+	      this.setState(function (state) {
+	        var newState = Object.assign({}, state, {
+	          playerMove: false,
+	          playerhasActed: true,
+	          playerAction: "call"
+	        });
+	        return newState;
+	      });
+	    }
+	  }, {
+	    key: 'handleBet',
+	    value: function handleBet(e) {
 	      e.preventDefault();
 	      var betvalue = this.state.inputValue;
 	      var bet = parseInt(betvalue);
@@ -32416,7 +32444,10 @@
 	        });
 	      } else {
 	        this.setState({
-	          lowerbet: false
+	          lowerbet: false,
+	          playerMove: false,
+	          playerhasActed: true,
+	          currentBet: bet
 	        });
 	        this.props.logBetAmount(bet);
 	        reducedbet = this.props.chips - bet;
@@ -32425,6 +32456,18 @@
 	          inputValue: 0
 	        });
 	      }
+	    }
+	  }, {
+	    key: 'villainMove',
+	    value: function villainMove() {
+	      if (!this.state.playerMove && this.state.playerhasActed && this.state.playerAction !== "call") {
+	        this.heuristic();
+	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.villainMove();
 	    }
 	  }, {
 	    key: 'evaluateCards',
@@ -32507,12 +32550,46 @@
 	      });
 	    }
 	  }, {
-	    key: 'dealCards',
-	    value: function dealCards(e) {
+	    key: 'heuristic',
+	    value: function heuristic() {
 	      var _this2 = this;
 	
+	      if (this.state.stage === "preflop") {
+	        if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
+	          (function () {
+	            var betamount = 25;
+	            _this2.props.logBetAmount(_this2.props.potsize + betamount);
+	            var reducedbet = _this2.props.villainchips - betamount - _this2.state.currentBet;
+	            _this2.props.modifyVillainChips(reducedbet);
+	            _this2.setState(function (state) {
+	              var newState = Object.assign({}, state, {
+	                playerMove: true,
+	                currentBet: betamount,
+	                villainAction: "bet"
+	              });
+	              return newState;
+	            });
+	            alert("VILLAIN BET " + betamount);
+	          })();
+	        } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 18) {
+	          this.setState(function (state) {
+	            var newState = Object.assign({}, state, {
+	              playerMove: true,
+	              stage: "postflop"
+	            });
+	            return newState;
+	          });
+	          alert("VILLAIN CHECKS");
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'dealCards',
+	    value: function dealCards(e) {
+	      var _this3 = this;
+	
 	      _axios2.default.get('/api/game').then(function (cards) {
-	        _this2.setState(function (state) {
+	        _this3.setState(function (state) {
 	          var newState = Object.assign({}, state, { yourcards: cards.data.slice(0, 2),
 	            villaincards: cards.data.slice(2, 4),
 	            communitycards: cards.data.slice(4),
@@ -32521,7 +32598,7 @@
 	          return newState;
 	        });
 	      }).then(function () {
-	        _this2.evaluateCards();
+	        _this3.evaluateCards();
 	      });
 	    }
 	  }, {
@@ -32530,34 +32607,40 @@
 	      var user = this.props.user;
 	      var chips = this.props.chips;
 	      var potsize = this.props.potsize;
+	      var villainchips = this.props.villainchips;
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(_Preflop2.default, {
 	          handleChange: this.handleChange,
-	          handleSubmit: this.handleSubmit,
+	          handleCheck: this.handleCheck,
+	          handleBet: this.handleBet,
 	          dealCards: this.dealCards,
 	          evaluateCards: this.evaluateCards,
 	          potsize: potsize,
 	          chips: chips,
 	          user: user,
+	          villainchips: villainchips,
+	          currentBet: this.state.currentBet,
 	          playerMove: this.state.playerMove,
 	          inputValue: this.state.inputValue,
 	          lowerbet: this.state.lowerbet,
 	          communitycards: this.state.communitycards,
 	          yourcards: this.state.yourcards,
+	          villainAction: this.state.villainAction,
 	          villaincards: this.state.villaincards,
 	          result: this.state.result
 	        }),
 	        this.state.stage === "postflop" ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
-	          handleSubmit: this.handleSubmit,
+	          handleBet: this.handleBet,
 	          dealCards: this.dealCards,
 	          evaluateCards: this.evaluateCards,
 	          playerMove: this.state.playerMove,
 	          potsize: potsize,
 	          chips: chips,
 	          user: user,
+	          villainchips: villainchips,
 	          inputValue: this.state.inputValue,
 	          lowerbet: this.state.lowerbet,
 	          communitycards: this.state.communitycards,
@@ -32588,7 +32671,6 @@
 	});
 	
 	exports.default = function (props) {
-	  console.log("plaermove?", props.playerMove);
 	  return _react2.default.createElement(
 	    "div",
 	    { className: "row" },
@@ -32606,7 +32688,7 @@
 	      { className: "col-xs-12 col-sm-12" },
 	      _react2.default.createElement(
 	        "form",
-	        { onSubmit: props.handleSubmit, className: "form-inline" },
+	        { onSubmit: props.handleBet, className: "form-inline" },
 	        _react2.default.createElement(
 	          "div",
 	          { className: "form-group" },
@@ -32635,7 +32717,7 @@
 	      ),
 	      _react2.default.createElement(
 	        "button",
-	        { type: "submit", className: "btn-sm btn-custom" },
+	        { type: "submit", className: "btn-sm btn-custom", onClick: props.handleCheck },
 	        "Check"
 	      ),
 	      _react2.default.createElement(
@@ -32651,34 +32733,48 @@
 	    ) : null,
 	    _react2.default.createElement(
 	      "div",
-	      null,
+	      { style: { fontSize: "1.2em" } },
 	      _react2.default.createElement(
-	        "strong",
+	        "div",
 	        null,
-	        "Pot Size: ",
-	        props.potsize
-	      )
+	        _react2.default.createElement(
+	          "strong",
+	          null,
+	          "Pot Size: ",
+	          props.potsize
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "strong",
+	          null,
+	          props.user,
+	          " Chip Balance: ",
+	          props.chips
+	        )
+	      ),
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "strong",
+	          null,
+	          "Villain Chip Balance: ",
+	          props.villainchips
+	        )
+	      ),
+	      props.playerMove ? _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "strong",
+	          null,
+	          "Your turn - Bet, Check or Fold"
+	        )
+	      ) : null
 	    ),
-	    _react2.default.createElement(
-	      "div",
-	      null,
-	      _react2.default.createElement(
-	        "strong",
-	        null,
-	        props.user,
-	        " Chip Balance: ",
-	        props.chips
-	      )
-	    ),
-	    props.playerMove ? _react2.default.createElement(
-	      "div",
-	      null,
-	      _react2.default.createElement(
-	        "strong",
-	        null,
-	        "Your turn - Bet, Check or Fold"
-	      )
-	    ) : null,
 	    _react2.default.createElement(
 	      "button",
 	      { className: "btn-sm btn-custom", onClick: props.dealCards },
@@ -32834,7 +32930,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.modifyChips = exports.deleteUser = exports.getUser = exports.loadUser = undefined;
+	exports.modVillainChips = exports.modifyChips = exports.deleteUser = exports.getUser = exports.loadUser = undefined;
 	
 	var _axios = __webpack_require__(/*! axios */ 236);
 	
@@ -32845,6 +32941,8 @@
 	var LOAD_USER = 'LOAD_USER';
 	var DELETE_USER = 'DELETE_USER';
 	var MODIFY_CHIPS = 'MODIFY_CHIPS';
+	var MODIFY_VILLAINCHIPS = "MODIFY_VILLAINCHIPS";
+	
 	var loadUser = exports.loadUser = function loadUser(user, chips) {
 	    return {
 	        type: LOAD_USER,
@@ -32874,6 +32972,13 @@
 	var modifyChips = exports.modifyChips = function modifyChips(chips) {
 	    return {
 	        type: MODIFY_CHIPS,
+	        chips: chips
+	    };
+	};
+	
+	var modVillainChips = exports.modVillainChips = function modVillainChips(chips) {
+	    return {
+	        type: MODIFY_VILLAINCHIPS,
 	        chips: chips
 	    };
 	};

@@ -13,9 +13,7 @@ const Home = () => (
         </div>
         <div>
           <ul className="list-group">
-              <li className="list-group-item">Welcome to Poker Spot! When you register you start off with 500 chips.</li>
-              <li className="list-group-item">One in 3 random lucky people start off with 1000 chips!</li>
-            <li className="list-group-item">If your final score is above 750 you earn a spot on our Leaderboard for a chance to win some sort of prize!</li>
+              <li className="list-group-item">Welcome to Poker Stack!</li>
           </ul>
         </div>
           <Link type="button" className="btn btn-danger" to="/game">JOIN GAME!</Link>
