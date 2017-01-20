@@ -81,17 +81,17 @@
 	
 	var _GameContainer2 = _interopRequireDefault(_GameContainer);
 	
-	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 310);
+	var _LeaderboardContainer = __webpack_require__(/*! ./containers/LeaderboardContainer */ 311);
 	
 	var _LeaderboardContainer2 = _interopRequireDefault(_LeaderboardContainer);
 	
-	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 313);
+	var _PaymentContainer = __webpack_require__(/*! ./containers/PaymentContainer */ 314);
 	
 	var _PaymentContainer2 = _interopRequireDefault(_PaymentContainer);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _payments = __webpack_require__(/*! ./action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ./action-creators/payments */ 309);
 	
 	var _store = __webpack_require__(/*! ./store */ 261);
 	
@@ -32286,9 +32286,9 @@
 	
 	var _GameClass2 = _interopRequireDefault(_GameClass);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 309);
 	
-	var _bets = __webpack_require__(/*! ../action-creators/bets */ 309);
+	var _bets = __webpack_require__(/*! ../action-creators/bets */ 310);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32352,6 +32352,10 @@
 	
 	var _Preflop2 = _interopRequireDefault(_Preflop);
 	
+	var _Postflop = __webpack_require__(/*! ./Postflop.jsx */ 308);
+	
+	var _Postflop2 = _interopRequireDefault(_Postflop);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32372,10 +32376,16 @@
 	      inputValue: 0,
 	      lowerbet: false,
 	      communitycards: [],
+	      turn: [],
+	      river: [],
 	      yourcards: [],
 	      villaincards: [],
-	      result: ""
+	      result: "",
+	      stage: "preflop",
+	      playerMove: false,
+	      showmovebuttons: false
 	    };
+	
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.dealCards = _this.dealCards.bind(_this);
@@ -32502,14 +32512,15 @@
 	      var _this2 = this;
 	
 	      _axios2.default.get('/api/game').then(function (cards) {
-	        console.log("CARDDDDS", cards);
-	        _this2.setState({
-	          yourcards: cards.data.slice(0, 2),
-	          villaincards: cards.data.slice(2, 4),
-	          communitycards: cards.data.slice(4)
+	        _this2.setState(function (state) {
+	          var newState = Object.assign({}, state, { yourcards: cards.data.slice(0, 2),
+	            villaincards: cards.data.slice(2, 4),
+	            communitycards: cards.data.slice(4),
+	            playerMove: true
+	          });
+	          return newState;
 	        });
 	      }).then(function () {
-	        console.log("STATE", _this2.state);
 	        _this2.evaluateCards();
 	      });
 	    }
@@ -32520,21 +32531,40 @@
 	      var chips = this.props.chips;
 	      var potsize = this.props.potsize;
 	
-	      return _react2.default.createElement(_Preflop2.default, {
-	        handleChange: this.handleChange,
-	        handleSubmit: this.handleSubmit,
-	        dealCards: this.dealCards,
-	        evaluateCards: this.evaluateCards,
-	        potsize: potsize,
-	        chips: chips,
-	        user: user,
-	        inputValue: this.state.inputValue,
-	        lowerbet: this.state.lowerbet,
-	        communitycards: this.state.communitycards,
-	        yourcards: this.state.yourcards,
-	        villaincards: this.state.villaincards,
-	        result: this.state.result
-	      });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_Preflop2.default, {
+	          handleChange: this.handleChange,
+	          handleSubmit: this.handleSubmit,
+	          dealCards: this.dealCards,
+	          evaluateCards: this.evaluateCards,
+	          potsize: potsize,
+	          chips: chips,
+	          user: user,
+	          playerMove: this.state.playerMove,
+	          inputValue: this.state.inputValue,
+	          lowerbet: this.state.lowerbet,
+	          communitycards: this.state.communitycards,
+	          yourcards: this.state.yourcards,
+	          villaincards: this.state.villaincards,
+	          result: this.state.result
+	        }),
+	        this.state.stage === "postflop" ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
+	          handleSubmit: this.handleSubmit,
+	          dealCards: this.dealCards,
+	          evaluateCards: this.evaluateCards,
+	          playerMove: this.state.playerMove,
+	          potsize: potsize,
+	          chips: chips,
+	          user: user,
+	          inputValue: this.state.inputValue,
+	          lowerbet: this.state.lowerbet,
+	          communitycards: this.state.communitycards,
+	          yourcards: this.state.yourcards,
+	          villaincards: this.state.villaincards,
+	          result: this.state.result }) : null
+	      );
 	    }
 	  }]);
 	
@@ -32558,7 +32588,7 @@
 	});
 	
 	exports.default = function (props) {
-	  console.log("PROPS", props);
+	  console.log("plaermove?", props.playerMove);
 	  return _react2.default.createElement(
 	    "div",
 	    { className: "row" },
@@ -32602,6 +32632,16 @@
 	          { type: "submit", className: "btn-sm btn-custom" },
 	          "Bet"
 	        )
+	      ),
+	      _react2.default.createElement(
+	        "button",
+	        { type: "submit", className: "btn-sm btn-custom" },
+	        "Check"
+	      ),
+	      _react2.default.createElement(
+	        "button",
+	        { type: "submit", className: "btn-sm btn-custom" },
+	        "Fold"
 	      )
 	    ),
 	    props.lowerbet ? _react2.default.createElement(
@@ -32630,13 +32670,22 @@
 	        props.chips
 	      )
 	    ),
+	    props.playerMove ? _react2.default.createElement(
+	      "div",
+	      null,
+	      _react2.default.createElement(
+	        "strong",
+	        null,
+	        "Your turn - Bet, Check or Fold"
+	      )
+	    ) : null,
 	    _react2.default.createElement(
 	      "button",
 	      { className: "btn-sm btn-custom", onClick: props.dealCards },
 	      _react2.default.createElement(
 	        "span",
 	        { className: "hidden-xs" },
-	        "Deal Cards"
+	        "New Game"
 	      )
 	    ),
 	    _react2.default.createElement(
@@ -32655,6 +32704,11 @@
 	              "th",
 	              null,
 	              "Your Cards"
+	            ),
+	            _react2.default.createElement(
+	              "th",
+	              null,
+	              "Villain Cards"
 	            )
 	          )
 	        ),
@@ -32675,43 +32729,6 @@
 	              null,
 	              _react2.default.createElement("img", { src: props.villaincards[0].image, className: "Image-logo" }),
 	              _react2.default.createElement("img", { src: props.villaincards[1].image, className: "Image-logo" })
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "thead",
-	          null,
-	          _react2.default.createElement(
-	            "tr",
-	            null,
-	            _react2.default.createElement(
-	              "strong",
-	              null,
-	              "Community Cards"
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "tbody",
-	          null,
-	          _react2.default.createElement(
-	            "tr",
-	            null,
-	            _react2.default.createElement(
-	              "td",
-	              null,
-	              _react2.default.createElement("img", { src: props.communitycards[0].image, className: "Image-logo" }),
-	              _react2.default.createElement("img", { src: props.communitycards[1].image, className: "Image-logo" }),
-	              _react2.default.createElement("img", { src: props.communitycards[2].image, className: "Image-logo" })
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            null,
-	            _react2.default.createElement(
-	              "h2",
-	              null,
-	              props.result
 	            )
 	          )
 	        )
@@ -32740,6 +32757,73 @@
 
 /***/ },
 /* 308 */
+/*!**********************************************!*\
+  !*** ./client/react/components/Postflop.jsx ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	exports.default = function (props) {
+	    return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	            "table",
+	            null,
+	            _react2.default.createElement(
+	                "thead",
+	                null,
+	                _react2.default.createElement(
+	                    "tr",
+	                    null,
+	                    _react2.default.createElement(
+	                        "strong",
+	                        null,
+	                        "Community Cards"
+	                    )
+	                )
+	            ),
+	            _react2.default.createElement(
+	                "tbody",
+	                null,
+	                _react2.default.createElement(
+	                    "tr",
+	                    null,
+	                    _react2.default.createElement(
+	                        "td",
+	                        null,
+	                        _react2.default.createElement("img", { src: props.communitycards[0].image, className: "Image-logo" }),
+	                        _react2.default.createElement("img", { src: props.communitycards[1].image, className: "Image-logo" }),
+	                        _react2.default.createElement("img", { src: props.communitycards[2].image, className: "Image-logo" })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    _react2.default.createElement(
+	                        "h2",
+	                        null,
+	                        props.result
+	                    )
+	                )
+	            )
+	        )
+	    );
+	};
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 309 */
 /*!**************************************************!*\
   !*** ./client/react/action-creators/payments.js ***!
   \**************************************************/
@@ -32795,7 +32879,7 @@
 	};
 
 /***/ },
-/* 309 */
+/* 310 */
 /*!**********************************************!*\
   !*** ./client/react/action-creators/bets.js ***!
   \**********************************************/
@@ -32816,7 +32900,7 @@
 	};
 
 /***/ },
-/* 310 */
+/* 311 */
 /*!*********************************************************!*\
   !*** ./client/react/containers/LeaderboardContainer.js ***!
   \*********************************************************/
@@ -32842,11 +32926,11 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 311);
+	var _Leaderboard = __webpack_require__(/*! ../components/Leaderboard */ 312);
 	
 	var _Leaderboard2 = _interopRequireDefault(_Leaderboard);
 	
-	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 312);
+	var _leaderboard = __webpack_require__(/*! ../action-creators/leaderboard */ 313);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32869,7 +32953,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Leaderboard2.default);
 
 /***/ },
-/* 311 */
+/* 312 */
 /*!************************************************!*\
   !*** ./client/react/components/Leaderboard.js ***!
   \************************************************/
@@ -32956,7 +33040,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 312 */
+/* 313 */
 /*!*****************************************************!*\
   !*** ./client/react/action-creators/leaderboard.js ***!
   \*****************************************************/
@@ -32994,7 +33078,7 @@
 	};
 
 /***/ },
-/* 313 */
+/* 314 */
 /*!*****************************************************!*\
   !*** ./client/react/containers/PaymentContainer.js ***!
   \*****************************************************/
@@ -33020,15 +33104,15 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 314);
+	var _PaymentsClass = __webpack_require__(/*! ../components/PaymentsClass */ 315);
 	
 	var _PaymentsClass2 = _interopRequireDefault(_PaymentsClass);
 	
-	var _Payments = __webpack_require__(/*! ../components/Payments.jsx */ 315);
+	var _Payments = __webpack_require__(/*! ../components/Payments.jsx */ 316);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 309);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -33056,7 +33140,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_PaymentsClass2.default);
 
 /***/ },
-/* 314 */
+/* 315 */
 /*!**************************************************!*\
   !*** ./client/react/components/PaymentsClass.js ***!
   \**************************************************/
@@ -33084,7 +33168,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 294);
 	
-	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 315);
+	var _Payments = __webpack_require__(/*! ./Payments.jsx */ 316);
 	
 	var _Payments2 = _interopRequireDefault(_Payments);
 	
@@ -33094,15 +33178,15 @@
 	
 	var _Navbar2 = _interopRequireDefault(_Navbar);
 	
-	var _PurchaseChips = __webpack_require__(/*! ./PurchaseChips */ 316);
+	var _PurchaseChips = __webpack_require__(/*! ./PurchaseChips */ 317);
 	
 	var _PurchaseChips2 = _interopRequireDefault(_PurchaseChips);
 	
-	var _DeleteAccountButton = __webpack_require__(/*! ./DeleteAccountButton */ 317);
+	var _DeleteAccountButton = __webpack_require__(/*! ./DeleteAccountButton */ 318);
 	
 	var _DeleteAccountButton2 = _interopRequireDefault(_DeleteAccountButton);
 	
-	var _payments = __webpack_require__(/*! ../action-creators/payments */ 308);
+	var _payments = __webpack_require__(/*! ../action-creators/payments */ 309);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -33238,7 +33322,7 @@
 	exports.default = _class;
 
 /***/ },
-/* 315 */
+/* 316 */
 /*!**********************************************!*\
   !*** ./client/react/components/Payments.jsx ***!
   \**********************************************/
@@ -33329,7 +33413,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 316 */
+/* 317 */
 /*!**************************************************!*\
   !*** ./client/react/components/PurchaseChips.js ***!
   \**************************************************/
@@ -33395,7 +33479,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 317 */
+/* 318 */
 /*!********************************************************!*\
   !*** ./client/react/components/DeleteAccountButton.js ***!
   \********************************************************/
