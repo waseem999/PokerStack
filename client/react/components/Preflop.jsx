@@ -8,22 +8,25 @@ return (
             <h1>Poker</h1>
           </div>
           <div className="col-xs-12 col-sm-12">
-            <form onSubmit={props.handleBet} className="form-inline">
-              <div className="form-group">
-                <label className="sr-only" htmlFor="bet">Bet</label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      onChange={props.handleChange}
-                      id="bet"
-                      value={props.inputValue}
-                      placeholder="Bet Amount" />
+                  <form onSubmit={props.handleBet} className="form-inline">
+                    <div className="form-group">
+                      <label className="sr-only" htmlFor="bet">Bet</label>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            onChange={props.handleChange}
+                            id="bet"
+                            value={props.inputValue}
+                            placeholder="Bet Amount" />
+                          </div>
                     </div>
-              </div>
-                  <button type="submit" className="btn-sm btn-custom">Bet</button>
-            </form>
-                <button type="submit" className="btn-sm btn-custom" onClick={props.handleCheck}>Check</button>
+                        <button type="submit" className="btn-sm btn-custom">Bet</button>
+                  </form>
+                {props.villainAction==="bet" ? (
+                <button type="submit" className="btn-sm btn-custom" onClick={props.handleCheck}>Call {props.currentBet}</button>) :
+                (<button type="submit" className="btn-sm btn-custom" onClick={props.handleCheck}>Check</button>)
+                 }
                   <button type="submit" className="btn-sm btn-custom">Fold</button>
           </div>
           
@@ -44,10 +47,6 @@ return (
                     props.playerMove ? (<div><strong>Your turn - Bet, Check or Fold</strong>
                   </div>) : null}
               </div>       
-
-          <button className="btn-sm btn-custom" onClick={props.dealCards}>
-              <span className="hidden-xs">New Game</span>
-          </button>
                         
             <div>
                {
@@ -72,6 +71,9 @@ return (
                }
             </div>
             <div>
+            <button className="btn-sm btn-custom" onClick={props.dealCards}>
+              <span className="hidden-xs">New Game</span>
+            </button>
             <button type="submit" className="btn-sm btn-custom" 
                   onClick={ () => {location.href = '/'}}>Exit Game</button>   
             </div>
