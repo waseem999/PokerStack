@@ -8,8 +8,7 @@ import Postflop from './Postflop.jsx';
 export default class Game extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = {
+    const initialState = {
       inputValue: 0,
       lowerbet: false,
       communitycards: [],
@@ -18,14 +17,28 @@ export default class Game extends Component {
       yourcards: [],
       villaincards: [],
       result : "",
-      stage: "preflop",
+      stage: 0,
       playerMove : false,
       showmovebuttons: false,
       currentBet: 0,
       villainAction : "",
       playerAction: "",
-      playerhasActed: false
-    };
+      playerhasActed: false,
+      playerPairs : {},
+      playerSpades : [],
+      playerHearts : [],
+      playerDiamonds : [],
+      playerClubs : [],
+      villainPairs : {},
+      villainSpades : [],
+      villainHearts : [],
+      villainDiamonds : [],
+      villainClubs : []
+    }
+
+    super(props);
+    this.state = initialState;
+
 
     this.handleBet = this.handleBet.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -41,22 +54,36 @@ export default class Game extends Component {
     });
   }
 
-  handleCheck(e) {
-    // if(this.state.villainAction==="bet"){
-    //   let call = this.props.currentBet;
-    //   this.props.logBetAmount(bet);
-    //   let reducedbet = this.props.chips - bet;
-    //   this.props.modifyUserChips(reducedbet);
+handleCheck(e) {
+    if(this.state.villainAction==="bet"){
+      let call = this.state.currentBet;
+      this.props.logBetAmount(this.props.potsize + call);
+      let reducedbet = this.props.chips - call;
+      this.props.modifyUserChips(reducedbet);
 
     this.setState(state => {
+      let stage = this.state.stage + 1;
       const newState = Object.assign({}, state, {
-          playerMove: false,
+          playerMove: true,
           playerhasActed: true,
-          playerAction: "call"
+          playerAction: "call",
+          villainAction: false,
+          stage: stage
       })
       return newState;
       })
     }
+    else {
+      this.setState(state => {
+      const newState = Object.assign({}, state, {
+          playerMove: false,
+          playerhasActed: true,
+          playerAction: "check"
+      })
+      return newState;
+      })
+    }
+}
   
 
 handleBet(e) {
@@ -77,13 +104,14 @@ handleBet(e) {
          lowerbet: false,
          playerMove: false,
          playerhasActed : true,
-         currentBet: bet
+         currentBet: bet,
+         playerAction: "bet"
        });
       this.props.logBetAmount(bet);
       reducedbet = this.props.chips - bet;
       this.props.modifyUserChips(reducedbet);
         this.setState({
-            inputValue : 0
+          inputValue : 0
         })
     }
   }
@@ -99,7 +127,15 @@ componentDidUpdate(){
 		this.villainMove();
 	}
 
+handlePairs(playerhandfilter){
+  
+}
+
 evaluateCards(){
+  if (this.state.stage===1){}
+
+
+
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
   let playerhandstrengtharray = [];
@@ -111,7 +147,11 @@ evaluateCards(){
       let playerhandfilter = playerhand.filter((val, index)=>{
                 return val.face===playerhand[i].face;
           });
-      playerhandfilter.length > 1 ? playerhandstrength = playerhandfilter.length : null;
+      
+      if(playerhandfilter.length > 1){
+        handlePairs(playerhandfilter);
+      }
+  
     }
 
       for (let i = 0; i < 5; i++){
@@ -177,10 +217,9 @@ switch (playerhandstrength) {
  })
 }
 
+villainPreflopMove(){
 
-heuristic(){
-    if(this.state.stage==="preflop"){
-      if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
+     if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
         let betamount = 25;
          this.props.logBetAmount(this.props.potsize + betamount);
         let reducedbet = this.props.villainchips - betamount - this.state.currentBet;
@@ -195,36 +234,107 @@ heuristic(){
         })
         alert("VILLAIN BET " + betamount);
       }
-      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 18){
-        this.setState(state => {
-          const newState = Object.assign({}, state, {
-              playerMove: true,
-              stage: "postflop"
-          })
-          return newState;
-        })
-        alert("VILLAIN CHECKS");
-
+      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction==="bet"){
+        this.villainCalls()
       }
-    }
+      
+      else if (this.state.playerAction==="bet"){
+        this.villainFolds()
+      }
+
+      else if (this.state.playerAction==="check"){
+        this.villainChecks()
+      }
 }
 
 
+heuristic(){
+    if(this.state.stage===0){
+      this.villainPreflopMove();
+    }
+}
+
+villainCalls(){
+  this.props.logBetAmount(this.props.potsize);
+    let reducedbet = this.props.villainchips - this.state.currentBet;
+    this.props.modifyVillainChips(reducedbet);
+    this.setState(state => {
+      let stage = this.state.stage + 1;
+      const newState = Object.assign({}, state, {
+        playerMove: true,
+        currentBet : 0,
+        villainAction : "call",
+        stage: stage
+      })
+        return newState;
+  })
+  alert("VILLAIN CALLS");
+}
+
+villainChecks(){
+  let stage = this.state.stage + 1;
+   this.setState(state => {
+          const newState = Object.assign({}, state, {
+              playerMove: true,
+              stage: stage
+          })
+          return newState;
+        })
+  alert("VILLAIN CHECKS");
+}
+
+villainFolds(){
+  this.setState(state => {
+          const newState = Object.assign({}, state, {
+            result: "Villain Folds, You Win!",
+            playerMove: true,
+            currentBet : 0,
+            villainAction : "fold"
+          })
+          return newState;
+        })
+}
 
  dealCards(e) {
     axios.get('/api/game')
         .then( (cards)=> {
           this.setState(state => {
-          const newState = Object.assign({}, state, {yourcards: cards.data.slice(0, 2),
-          villaincards: cards.data.slice(2, 4),
-          communitycards: cards.data.slice(4),
-          playerMove: true
+          const newState = Object.assign({}, state, {
+            inputValue: 0,
+            lowerbet: false,
+            communitycards: [],
+            turn: [],
+            river: [],
+            yourcards: [],
+            villaincards: [],
+            result : "",
+            stage: 0,
+            playerMove : false,
+            showmovebuttons: false,
+            currentBet: 0,
+            villainAction : "",
+            playerAction: "",
+            playerhasActed: false,
+            playerPairs : [],
+            playerSpades : [],
+            playerHearts : [],
+            playerDiamonds : [],
+            playerClubs : [],
+            villainPairs : [],
+            villainSpades : [],
+            villainHearts : [],
+            villainDiamonds : [],
+            villainClubs : [],
+            yourcards: cards.data.slice(0, 2),
+            villaincards: cards.data.slice(2, 4),
+            communitycards: cards.data.slice(4),
+            playerMove: true
           })
           return newState;
           })
         })
         .then(()=> {
-          this.evaluateCards();
+          
         })
   }
 
@@ -257,7 +367,7 @@ heuristic(){
           villaincards={this.state.villaincards}
           result={this.state.result}
         />
-        {this.state.stage === "postflop" ? <Postflop handleChange={this.handleChange}
+        {this.state.stage === 1 ? <Postflop handleChange={this.handleChange}
           handleBet={this.handleBet}
           dealCards={this.dealCards}
           evaluateCards={this.evaluateCards}
@@ -272,6 +382,9 @@ heuristic(){
           yourcards={this.state.yourcards}
           villaincards={this.state.villaincards}
           result={this.state.result}/> : null}
+       {this.state.result ? (<div>
+          <h2>{this.state.result}</h2>
+       </div>) : null}
       </div>
     )
   }

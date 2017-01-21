@@ -32363,6 +32363,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -32375,9 +32377,7 @@
 	  function Game(props) {
 	    _classCallCheck(this, Game);
 	
-	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
-	
-	    _this.state = {
+	    var initialState = {
 	      inputValue: 0,
 	      lowerbet: false,
 	      communitycards: [],
@@ -32386,14 +32386,28 @@
 	      yourcards: [],
 	      villaincards: [],
 	      result: "",
-	      stage: "preflop",
+	      stage: 0,
 	      playerMove: false,
 	      showmovebuttons: false,
 	      currentBet: 0,
 	      villainAction: "",
 	      playerAction: "",
-	      playerhasActed: false
+	      playerhasActed: false,
+	      playerPairs: {},
+	      playerSpades: [],
+	      playerHearts: [],
+	      playerDiamonds: [],
+	      playerClubs: [],
+	      villainPairs: {},
+	      villainSpades: [],
+	      villainHearts: [],
+	      villainDiamonds: [],
+	      villainClubs: []
 	    };
+	
+	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
+	
+	    _this.state = initialState;
 	
 	    _this.handleBet = _this.handleBet.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
@@ -32413,20 +32427,35 @@
 	  }, {
 	    key: 'handleCheck',
 	    value: function handleCheck(e) {
-	      // if(this.state.villainAction==="bet"){
-	      //   let call = this.props.currentBet;
-	      //   this.props.logBetAmount(bet);
-	      //   let reducedbet = this.props.chips - bet;
-	      //   this.props.modifyUserChips(reducedbet);
+	      var _this2 = this;
 	
-	      this.setState(function (state) {
-	        var newState = Object.assign({}, state, {
-	          playerMove: false,
-	          playerhasActed: true,
-	          playerAction: "call"
+	      if (this.state.villainAction === "bet") {
+	        var call = this.state.currentBet;
+	        this.props.logBetAmount(this.props.potsize + call);
+	        var reducedbet = this.props.chips - call;
+	        this.props.modifyUserChips(reducedbet);
+	
+	        this.setState(function (state) {
+	          var stage = _this2.state.stage + 1;
+	          var newState = Object.assign({}, state, {
+	            playerMove: true,
+	            playerhasActed: true,
+	            playerAction: "call",
+	            villainAction: false,
+	            stage: stage
+	          });
+	          return newState;
 	        });
-	        return newState;
-	      });
+	      } else {
+	        this.setState(function (state) {
+	          var newState = Object.assign({}, state, {
+	            playerMove: false,
+	            playerhasActed: true,
+	            playerAction: "check"
+	          });
+	          return newState;
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'handleBet',
@@ -32447,7 +32476,8 @@
 	          lowerbet: false,
 	          playerMove: false,
 	          playerhasActed: true,
-	          currentBet: bet
+	          currentBet: bet,
+	          playerAction: "bet"
 	        });
 	        this.props.logBetAmount(bet);
 	        reducedbet = this.props.chips - bet;
@@ -32470,8 +32500,13 @@
 	      this.villainMove();
 	    }
 	  }, {
+	    key: 'handlePairs',
+	    value: function handlePairs(playerhandfilter) {}
+	  }, {
 	    key: 'evaluateCards',
 	    value: function evaluateCards() {
+	      if (this.state.stage === 1) {}
+	
 	      var playerhand = this.state.yourcards.concat(this.state.communitycards);
 	      var villainhand = this.state.villaincards.concat(this.state.communitycards);
 	      var playerhandstrengtharray = [];
@@ -32483,7 +32518,10 @@
 	        var playerhandfilter = playerhand.filter(function (val, index) {
 	          return val.face === playerhand[i].face;
 	        });
-	        playerhandfilter.length > 1 ? playerhandstrength = playerhandfilter.length : null;
+	
+	        if (playerhandfilter.length > 1) {
+	          handlePairs(playerhandfilter);
+	        }
 	      };
 	
 	      for (var i = 0; i < 5; i++) {
@@ -32550,56 +32588,126 @@
 	      });
 	    }
 	  }, {
-	    key: 'heuristic',
-	    value: function heuristic() {
-	      var _this2 = this;
+	    key: 'villainPreflopMove',
+	    value: function villainPreflopMove() {
+	      var _this3 = this;
 	
-	      if (this.state.stage === "preflop") {
-	        if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
-	          (function () {
-	            var betamount = 25;
-	            _this2.props.logBetAmount(_this2.props.potsize + betamount);
-	            var reducedbet = _this2.props.villainchips - betamount - _this2.state.currentBet;
-	            _this2.props.modifyVillainChips(reducedbet);
-	            _this2.setState(function (state) {
-	              var newState = Object.assign({}, state, {
-	                playerMove: true,
-	                currentBet: betamount,
-	                villainAction: "bet"
-	              });
-	              return newState;
-	            });
-	            alert("VILLAIN BET " + betamount);
-	          })();
-	        } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 18) {
-	          this.setState(function (state) {
+	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
+	        (function () {
+	          var betamount = 25;
+	          _this3.props.logBetAmount(_this3.props.potsize + betamount);
+	          var reducedbet = _this3.props.villainchips - betamount - _this3.state.currentBet;
+	          _this3.props.modifyVillainChips(reducedbet);
+	          _this3.setState(function (state) {
 	            var newState = Object.assign({}, state, {
 	              playerMove: true,
-	              stage: "postflop"
+	              currentBet: betamount,
+	              villainAction: "bet"
 	            });
 	            return newState;
 	          });
-	          alert("VILLAIN CHECKS");
-	        }
+	          alert("VILLAIN BET " + betamount);
+	        })();
+	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction === "bet") {
+	        this.villainCalls();
+	      } else if (this.state.playerAction === "bet") {
+	        this.villainFolds();
+	      } else if (this.state.playerAction === "check") {
+	        this.villainChecks();
 	      }
+	    }
+	  }, {
+	    key: 'heuristic',
+	    value: function heuristic() {
+	      if (this.state.stage === 0) {
+	        this.villainPreflopMove();
+	      }
+	    }
+	  }, {
+	    key: 'villainCalls',
+	    value: function villainCalls() {
+	      var _this4 = this;
+	
+	      this.props.logBetAmount(this.props.potsize);
+	      var reducedbet = this.props.villainchips - this.state.currentBet;
+	      this.props.modifyVillainChips(reducedbet);
+	      this.setState(function (state) {
+	        var stage = _this4.state.stage + 1;
+	        var newState = Object.assign({}, state, {
+	          playerMove: true,
+	          currentBet: 0,
+	          villainAction: "call",
+	          stage: stage
+	        });
+	        return newState;
+	      });
+	      alert("VILLAIN CALLS");
+	    }
+	  }, {
+	    key: 'villainChecks',
+	    value: function villainChecks() {
+	      var stage = this.state.stage + 1;
+	      this.setState(function (state) {
+	        var newState = Object.assign({}, state, {
+	          playerMove: true,
+	          stage: stage
+	        });
+	        return newState;
+	      });
+	      alert("VILLAIN CHECKS");
+	    }
+	  }, {
+	    key: 'villainFolds',
+	    value: function villainFolds() {
+	      this.setState(function (state) {
+	        var newState = Object.assign({}, state, {
+	          result: "Villain Folds, You Win!",
+	          playerMove: true,
+	          currentBet: 0,
+	          villainAction: "fold"
+	        });
+	        return newState;
+	      });
 	    }
 	  }, {
 	    key: 'dealCards',
 	    value: function dealCards(e) {
-	      var _this3 = this;
+	      var _this5 = this;
 	
 	      _axios2.default.get('/api/game').then(function (cards) {
-	        _this3.setState(function (state) {
-	          var newState = Object.assign({}, state, { yourcards: cards.data.slice(0, 2),
-	            villaincards: cards.data.slice(2, 4),
-	            communitycards: cards.data.slice(4),
-	            playerMove: true
-	          });
+	        _this5.setState(function (state) {
+	          var _Object$assign;
+	
+	          var newState = Object.assign({}, state, (_Object$assign = {
+	            inputValue: 0,
+	            lowerbet: false,
+	            communitycards: [],
+	            turn: [],
+	            river: [],
+	            yourcards: [],
+	            villaincards: [],
+	            result: "",
+	            stage: 0,
+	            playerMove: false,
+	            showmovebuttons: false,
+	            currentBet: 0,
+	            villainAction: "",
+	            playerAction: "",
+	            playerhasActed: false,
+	            playerPairs: [],
+	            playerSpades: [],
+	            playerHearts: [],
+	            playerDiamonds: [],
+	            playerClubs: [],
+	            villainPairs: [],
+	            villainSpades: [],
+	            villainHearts: [],
+	            villainDiamonds: [],
+	            villainClubs: []
+	          }, _defineProperty(_Object$assign, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign, 'communitycards', cards.data.slice(4)), _defineProperty(_Object$assign, 'playerMove', true), _Object$assign));
 	          return newState;
 	        });
-	      }).then(function () {
-	        _this3.evaluateCards();
-	      });
+	      }).then(function () {});
 	    }
 	  }, {
 	    key: 'render',
@@ -32632,7 +32740,7 @@
 	          villaincards: this.state.villaincards,
 	          result: this.state.result
 	        }),
-	        this.state.stage === "postflop" ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
+	        this.state.stage === 1 ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
 	          handleBet: this.handleBet,
 	          dealCards: this.dealCards,
 	          evaluateCards: this.evaluateCards,
@@ -32646,7 +32754,16 @@
 	          communitycards: this.state.communitycards,
 	          yourcards: this.state.yourcards,
 	          villaincards: this.state.villaincards,
-	          result: this.state.result }) : null
+	          result: this.state.result }) : null,
+	        this.state.result ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'h2',
+	            null,
+	            this.state.result
+	          )
+	        ) : null
 	      );
 	    }
 	  }]);
@@ -32715,7 +32832,12 @@
 	          "Bet"
 	        )
 	      ),
-	      _react2.default.createElement(
+	      props.villainAction === "bet" ? _react2.default.createElement(
+	        "button",
+	        { type: "submit", className: "btn-sm btn-custom", onClick: props.handleCheck },
+	        "Call ",
+	        props.currentBet
+	      ) : _react2.default.createElement(
 	        "button",
 	        { type: "submit", className: "btn-sm btn-custom", onClick: props.handleCheck },
 	        "Check"
@@ -32776,15 +32898,6 @@
 	      ) : null
 	    ),
 	    _react2.default.createElement(
-	      "button",
-	      { className: "btn-sm btn-custom", onClick: props.dealCards },
-	      _react2.default.createElement(
-	        "span",
-	        { className: "hidden-xs" },
-	        "New Game"
-	      )
-	    ),
-	    _react2.default.createElement(
 	      "div",
 	      null,
 	      props.yourcards[0] && _react2.default.createElement(
@@ -32833,6 +32946,15 @@
 	    _react2.default.createElement(
 	      "div",
 	      null,
+	      _react2.default.createElement(
+	        "button",
+	        { className: "btn-sm btn-custom", onClick: props.dealCards },
+	        _react2.default.createElement(
+	          "span",
+	          { className: "hidden-xs" },
+	          "New Game"
+	        )
+	      ),
 	      _react2.default.createElement(
 	        "button",
 	        { type: "submit", className: "btn-sm btn-custom",
@@ -32896,15 +33018,6 @@
 	                        _react2.default.createElement("img", { src: props.communitycards[0].image, className: "Image-logo" }),
 	                        _react2.default.createElement("img", { src: props.communitycards[1].image, className: "Image-logo" }),
 	                        _react2.default.createElement("img", { src: props.communitycards[2].image, className: "Image-logo" })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    null,
-	                    _react2.default.createElement(
-	                        "h2",
-	                        null,
-	                        props.result
 	                    )
 	                )
 	            )
