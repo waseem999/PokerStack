@@ -46,6 +46,7 @@ export default class Game extends Component {
     this.dealCards = this.dealCards.bind(this);
     this.evaluateCards = this.evaluateCards.bind(this);
     this.handlePairs = this.handlePairs.bind(this);
+    this.villainMove = this.villainMove.bind(this);
     }
 
 
@@ -56,12 +57,15 @@ export default class Game extends Component {
   }
 
 handlePairs(actor, handfilter){
-  this.setState(state => {
-    const newState = Object.assign({}, state, {
-          [actor] : { [handfilter[0].face] : handfilter}
-            })
-  return newState;
-  })
+  // this.setState(state => {
+  //   const newState = Object.assign({}, state, {
+  //         [actor] : { [handfilter[0].face] : handfilter}
+  //           })
+
+    this.setState((prevState, props) => ({
+       [actor] : handfilter
+    }));
+      
 }
 
 
@@ -116,19 +120,21 @@ handleBet(e) {
          playerMove: false,
          playerhasActed : true,
          currentBet: bet,
-         playerAction: "bet"
+         playerAction: "bet",
+         inputValue : 0
        });
-      this.props.logBetAmount(bet);
+      let pottotal = this.props.potsize + bet;
+      this.props.logBetAmount(pottotal);
       reducedbet = this.props.chips - bet;
       this.props.modifyUserChips(reducedbet);
-        this.setState({
-          inputValue : 0
-        })
     }
   }
 
 villainMove(){
   if(!this.state.playerMove && this.state.playerhasActed && this.state.playerAction !== "call"){
+    this.setState({
+         playerMove: true
+       })
     this.heuristic()
   }
 }
@@ -142,6 +148,7 @@ componentDidUpdate(){
 
 evaluateCards(){
   //if (this.state.stage===1){}
+  console.log("do we get here?")
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
   let playerhandstrengtharray = [];
@@ -160,6 +167,7 @@ evaluateCards(){
     }
 
     for (let i = 0; i < villainhand.length; i++){
+      
       let villainhandfilter = villainhand.filter((val, index)=>{
                 return val.face===villainhand[i].face;
           });
@@ -256,9 +264,12 @@ villainPreflopMove(){
       }
 }
 
+//LEFT OFF HERE EVALUATIING WHAT TO DO POST-FLOP!!!!
 villainPostflopMove(){
+ 
   if(this.state.villainPairs){
-    for (var keys in this.state.villainPairs){
+    var villainpairs = this.state.villainPairs;
+    if (villainpairs.length > 3){
       
     }
   }
@@ -287,8 +298,8 @@ villainCalls(){
       })
         return newState;
   })
-  alert("VILLAIN CALLS");
   this.evaluateCards();
+  alert("VILLAIN CALLS");
 }
 
 villainChecks(){
@@ -300,8 +311,9 @@ villainChecks(){
           })
           return newState;
         })
-  alert("VILLAIN CHECKS");
   this.evaluateCards();
+  alert("VILLAIN CHECKS");
+
 }
 
 villainFolds(){
