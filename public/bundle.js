@@ -32414,6 +32414,7 @@
 	    _this.handleCheck = _this.handleCheck.bind(_this);
 	    _this.dealCards = _this.dealCards.bind(_this);
 	    _this.evaluateCards = _this.evaluateCards.bind(_this);
+	    _this.handlePairs = _this.handlePairs.bind(_this);
 	    return _this;
 	  }
 	
@@ -32422,6 +32423,14 @@
 	    value: function handleChange(e) {
 	      this.setState({
 	        inputValue: e.target.value
+	      });
+	    }
+	  }, {
+	    key: 'handlePairs',
+	    value: function handlePairs(actor, handfilter) {
+	      this.setState(function (state) {
+	        var newState = Object.assign({}, state, _defineProperty({}, actor, _defineProperty({}, handfilter[0].face, handfilter)));
+	        return newState;
 	      });
 	    }
 	  }, {
@@ -32500,13 +32509,11 @@
 	      this.villainMove();
 	    }
 	  }, {
-	    key: 'handlePairs',
-	    value: function handlePairs(playerhandfilter) {}
-	  }, {
 	    key: 'evaluateCards',
 	    value: function evaluateCards() {
-	      if (this.state.stage === 1) {}
+	      var _this3 = this;
 	
+	      //if (this.state.stage===1){}
 	      var playerhand = this.state.yourcards.concat(this.state.communitycards);
 	      var villainhand = this.state.villaincards.concat(this.state.communitycards);
 	      var playerhandstrengtharray = [];
@@ -32520,11 +32527,11 @@
 	        });
 	
 	        if (playerhandfilter.length > 1) {
-	          handlePairs(playerhandfilter);
+	          _this3.handlePairs("playerPairs", playerhandfilter);
 	        }
 	      };
 	
-	      for (var i = 0; i < 5; i++) {
+	      for (var i = 0; i < playerhand.length; i++) {
 	        _loop(i);
 	      }
 	
@@ -32533,72 +32540,83 @@
 	          return val.face === villainhand[i].face;
 	        });
 	        villainhandfilter.length > 1 ? villainhandstrength = villainhandfilter.length : null;
+	        if (villainhandfilter.length > 1) {
+	          _this3.handlePairs("villainPairs", villainhandfilter);
+	        }
 	      };
 	
-	      for (var i = 0; i < 5; i++) {
+	      for (var i = 0; i < villainhand.length; i++) {
 	        _loop2(i);
 	      }
-	      switch (playerhandstrength) {
-	        case 4:
-	          if (villainhandstrength === 4) {
-	            result = "tie!";
-	          } else {
-	            result = "You have 4 of a kind, you win!";
-	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
-	          }
-	          break;
-	        case 3:
-	          if (villainhandstrength === 3) {
-	            result = "tie!";
-	          } else if (villainhandstrength > 3) {
-	            result = "villain wins!";
-	            this.props.logBetAmount(0);
-	          } else {
-	            result = "You have 3 of a kind, you win!";
-	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
-	            this.props.logBetAmount(0);
-	          }
-	          break;
-	        case 2:
-	          if (villainhandstrength === 2) {
-	            result = "tie!";
-	          } else if (villainhandstrength > 2) {
-	            result = "villain wins!";
-	            this.props.logBetAmount(0);
-	          } else {
-	            result = "You have a pair, you win!";
-	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
-	            this.props.logBetAmount(0);
-	          }
-	          break;
-	        case 1:
-	          if (villainhandstrength === 1) {
-	            result = "tie!";
-	          } else if (villainhandstrength === 2) {
-	            result = "villain wins with a pair!";
-	            this.props.logBetAmount(0);
-	          } else {
-	            result = "villain wins!";
-	            this.props.logBetAmount(0);
-	          }
-	          break;
-	      }
-	      this.setState({
-	        result: result
-	      });
+	
+	      // switch (playerhandstrength) {
+	      //     case 4:
+	      //         if (villainhandstrength===4){
+	      //           result = "tie!"
+	      //         }
+	      //         else {
+	      //           result = "You have 4 of a kind, you win!";
+	      //           this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+	      //         }
+	      //         break;
+	      //     case 3:
+	      //      if (villainhandstrength===3){
+	      //           result = "tie!"
+	      //         }
+	      //     else if (villainhandstrength > 3){
+	      //           result = "villain wins!";
+	      //            this.props.logBetAmount(0);
+	      //         }
+	      //     else {
+	      //         result = "You have 3 of a kind, you win!";
+	      //         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+	      //         this.props.logBetAmount(0);
+	      //       }
+	      //         break;
+	      //     case 2:
+	      //        if (villainhandstrength===2){
+	      //           result = "tie!"
+	      //         }
+	      //       else if (villainhandstrength > 2){
+	      //           result = "villain wins!";
+	      //           this.props.logBetAmount(0);
+	      //         }
+	      //     else {
+	      //         result = "You have a pair, you win!";
+	      //         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+	      //         this.props.logBetAmount(0);
+	      //       }
+	      //         break;
+	      //     case 1:
+	      //         if (villainhandstrength===1){
+	      //           result = "tie!"
+	      //         }
+	      //       else if (villainhandstrength===2){
+	      //           result = "villain wins with a pair!";
+	      //            this.props.logBetAmount(0);
+	      //         }
+	      //       else {
+	      //           result = "villain wins!";
+	      //            this.props.logBetAmount(0);
+	      //         }
+	      //         break;
+	      //   }
+	      //  this.setState({
+	      //    result : result
+	      //  })
 	    }
 	  }, {
 	    key: 'villainPreflopMove',
 	    value: function villainPreflopMove() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
 	        (function () {
 	          var betamount = 25;
-	          _this3.props.logBetAmount(_this3.props.potsize + betamount);
-	          var reducedbet = _this3.props.villainchips - betamount - _this3.state.currentBet;
-	          _this3.props.modifyVillainChips(reducedbet);
-	          _this3.setState(function (state) {
+	          _this4.props.logBetAmount(_this4.props.potsize + betamount);
+	          var reducedbet = _this4.props.villainchips - betamount - _this4.state.currentBet;
+	          _this4.props.modifyVillainChips(reducedbet);
+	          _this4.setState(function (state) {
 	            var newState = Object.assign({}, state, {
 	              playerMove: true,
 	              currentBet: betamount,
@@ -32617,22 +32635,32 @@
 	      }
 	    }
 	  }, {
+	    key: 'villainPostflopMove',
+	    value: function villainPostflopMove() {
+	      if (this.state.villainPairs) {
+	        for (var keys in this.state.villainPairs) {}
+	      }
+	    }
+	  }, {
 	    key: 'heuristic',
 	    value: function heuristic() {
 	      if (this.state.stage === 0) {
 	        this.villainPreflopMove();
 	      }
+	      if (this.state.stage === 1) {
+	        this.villainPostflopMove();
+	      }
 	    }
 	  }, {
 	    key: 'villainCalls',
 	    value: function villainCalls() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      this.props.logBetAmount(this.props.potsize);
 	      var reducedbet = this.props.villainchips - this.state.currentBet;
 	      this.props.modifyVillainChips(reducedbet);
 	      this.setState(function (state) {
-	        var stage = _this4.state.stage + 1;
+	        var stage = _this5.state.stage + 1;
 	        var newState = Object.assign({}, state, {
 	          playerMove: true,
 	          currentBet: 0,
@@ -32642,6 +32670,7 @@
 	        return newState;
 	      });
 	      alert("VILLAIN CALLS");
+	      this.evaluateCards();
 	    }
 	  }, {
 	    key: 'villainChecks',
@@ -32655,6 +32684,7 @@
 	        return newState;
 	      });
 	      alert("VILLAIN CHECKS");
+	      this.evaluateCards();
 	    }
 	  }, {
 	    key: 'villainFolds',
@@ -32672,13 +32702,13 @@
 	  }, {
 	    key: 'dealCards',
 	    value: function dealCards(e) {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      _axios2.default.get('/api/game').then(function (cards) {
-	        _this5.setState(function (state) {
-	          var _Object$assign;
+	        _this6.setState(function (state) {
+	          var _Object$assign2;
 	
-	          var newState = Object.assign({}, state, (_Object$assign = {
+	          var newState = Object.assign({}, state, (_Object$assign2 = {
 	            inputValue: 0,
 	            lowerbet: false,
 	            communitycards: [],
@@ -32704,7 +32734,7 @@
 	            villainHearts: [],
 	            villainDiamonds: [],
 	            villainClubs: []
-	          }, _defineProperty(_Object$assign, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign, 'communitycards', cards.data.slice(4)), _defineProperty(_Object$assign, 'playerMove', true), _Object$assign));
+	          }, _defineProperty(_Object$assign2, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign2, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign2, 'communitycards', cards.data.slice(4)), _defineProperty(_Object$assign2, 'playerMove', true), _Object$assign2));
 	          return newState;
 	        });
 	      }).then(function () {});
