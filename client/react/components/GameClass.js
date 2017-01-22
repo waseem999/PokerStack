@@ -237,19 +237,7 @@ evaluateCards(){
 
 villainPreflopMove(){
      if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
-        let betamount = 25;
-         this.props.logBetAmount(this.props.potsize + betamount);
-        let reducedbet = this.props.villainchips - betamount - this.state.currentBet;
-        this.props.modifyVillainChips(reducedbet);
-        this.setState(state => {
-          const newState = Object.assign({}, state, {
-              playerMove: true,
-              currentBet : betamount,
-              villainAction : "bet"
-          })
-          return newState;
-        })
-        alert("VILLAIN BET " + betamount);
+        this.villainBets(25)
       }
       else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction==="bet"){
         this.villainCalls()
@@ -266,12 +254,23 @@ villainPreflopMove(){
 
 //LEFT OFF HERE EVALUATIING WHAT TO DO POST-FLOP!!!!
 villainPostflopMove(){
- 
-  if(this.state.villainPairs){
+  let playerAction = this.state.playerAction;
+  console.log("PAIRS??", this.state.villainPairs)
+  if(this.state.villainPairs[0]){
     var villainpairs = this.state.villainPairs;
-    if (villainpairs.length > 3){
-      
+    if (villainpairs.length > 2){
+      this.villainBets(this.props.potsize - 20)
     }
+    else if (villainpairs.length === 2){
+      this.villainBets(Math.floor(this.props.potsize / 2))
+    }
+  }
+  else if (playerAction=="bet"){
+    this.villainFolds()
+  }
+  else if (playerAction=="check"){
+    console.log("checkssss????")
+    this.villainChecks()
   }
 }
 
@@ -314,6 +313,21 @@ villainChecks(){
   this.evaluateCards();
   alert("VILLAIN CHECKS");
 
+}
+
+villainBets(bet){
+  this.props.logBetAmount(this.props.potsize + bet);
+  let reducedbet = this.props.villainchips - bet - this.state.currentBet;
+  this.props.modifyVillainChips(reducedbet);
+  this.setState(state => {
+          const newState = Object.assign({}, state, {
+              playerMove: true,
+              currentBet : bet,
+              villainAction : "bet"
+          })
+          return newState;
+        })
+  alert("VILLAIN BET " + bet);
 }
 
 villainFolds(){
@@ -367,7 +381,7 @@ villainFolds(){
           })
         })
         .then(()=> {
-          
+          this.props.logBetAmount(0);
         })
   }
 
