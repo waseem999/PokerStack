@@ -89,17 +89,16 @@ handleCheck(e) {
       })
     }
     else {
-      this.setState(state => {
-      const newState = Object.assign({}, state, {
-          playerMove: false,
-          playerhasActed: true,
-          playerAction: "check"
+      this.setState((prevState, props) => {
+      const newState = Object.assign({}, prevState, {playerMove: false,
+        playerhasActed: true,
+        playerAction: "check"
       })
       return newState;
       })
-    }
+    console.log("THIS IS THE STATE AFTER HANDLE CHECK!", this.state)
+  }
 }
-  
 
 handleBet(e) {
     e.preventDefault();
@@ -147,11 +146,12 @@ componentDidUpdate(){
 
 
 evaluateCards(){
-  //if (this.state.stage===1){}
-  console.log("do we get here?")
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
-  let playerhandstrengtharray = [];
+  if (this.state.stage===2){
+  playerhand = playerhand.concat(this.state.turn);
+  villainhand = villainhand.concat(this.state.turn);
+  }
   let playerhandstrength = 1;
   let villainhandstrength = 1;
   let result = "";
@@ -176,7 +176,8 @@ evaluateCards(){
         this.handlePairs("villainPairs", villainhandfilter);
       }
     }
-
+  
+ 
 
 // switch (playerhandstrength) {
 //     case 4:
@@ -239,7 +240,7 @@ villainPreflopMove(){
      if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
         this.villainBets(25)
       }
-      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction==="bet"){
+      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction==="bet"){
         this.villainCalls()
       }
       
@@ -252,10 +253,9 @@ villainPreflopMove(){
       }
 }
 
-//LEFT OFF HERE EVALUATIING WHAT TO DO POST-FLOP!!!!
 villainPostflopMove(){
+  console.log("this.state", this.state)
   let playerAction = this.state.playerAction;
-  console.log("PAIRS??", this.state.villainPairs)
   if(this.state.villainPairs[0]){
     var villainpairs = this.state.villainPairs;
     if (villainpairs.length > 2){
@@ -269,10 +269,52 @@ villainPostflopMove(){
     this.villainFolds()
   }
   else if (playerAction=="check"){
-    console.log("checkssss????")
     this.villainChecks()
   }
 }
+
+villainTurnMove(){
+  console.log("DO I GET HERE WITH A CHECK ON THE TURN???", this.state);
+  let playerAction = this.state.playerAction;
+  if(this.state.villainPairs[0] && this.state.playerAction!=="call"){
+    var villainpairs = this.state.villainPairs;
+    if (villainpairs.length >= 2){
+      this.villainBets(Math.floor(this.props.potsize / 1.5))
+    }
+  }
+  else if (playerAction=="bet"){
+    this.villainFolds()
+  }
+  else{
+    this.villainChecks()
+  }
+}
+
+
+
+villainRiverMove(){
+  let playerAction = this.state.playerAction;
+  if(this.state.villainPairs[0]){
+    var villainpairs = this.state.villainPairs;
+    if (villainpairs.length > 2){
+      this.villainBets(this.props.potsize)
+    }
+    else if (villainpairs.length === 2){
+      this.villainBets(Math.floor(this.props.potsize / 2))
+    }
+  }
+  else if (playerAction=="bet"){
+    this.villainFolds()
+  }
+  else if (playerAction=="check"){
+    this.villainChecks()
+  }
+}
+
+showDown(){
+  console.log("THIS is the State at showdown", this.state)
+}
+
 
 heuristic(){
     if(this.state.stage===0){
@@ -281,10 +323,18 @@ heuristic(){
     if(this.state.stage===1){
       this.villainPostflopMove();
     }
+    if(this.state.stage===2){
+      this.villainTurnMove();
+    }
+    if(this.state.stage===3){
+      this.villainRiverMove();
+      this.showDown();
+    }
 }
 
+
 villainCalls(){
-  this.props.logBetAmount(this.props.potsize);
+  this.props.logBetAmount(this.props.potsize + this.state.currentBet);
     let reducedbet = this.props.villainchips - this.state.currentBet;
     this.props.modifyVillainChips(reducedbet);
     this.setState(state => {
@@ -302,6 +352,7 @@ villainCalls(){
 }
 
 villainChecks(){
+  console.log("VILLAIN CHECKS STATE", this.state)
   let stage = this.state.stage + 1;
    this.setState(state => {
           const newState = Object.assign({}, state, {
@@ -340,6 +391,8 @@ villainFolds(){
           })
           return newState;
         })
+  this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+  this.props.logBetAmount(0);
 }
 
  dealCards(e) {
@@ -374,7 +427,9 @@ villainFolds(){
             villainClubs : [],
             yourcards: cards.data.slice(0, 2),
             villaincards: cards.data.slice(2, 4),
-            communitycards: cards.data.slice(4),
+            communitycards: cards.data.slice(4, 7),
+            turn: cards.data.slice(7, 8),
+            river: cards.data.slice(8),
             playerMove: true
           })
           return newState;
@@ -414,11 +469,12 @@ villainFolds(){
           villaincards={this.state.villaincards}
           result={this.state.result}
         />
-        {this.state.stage === 1 ? <Postflop handleChange={this.handleChange}
+        {this.state.stage > 0 ? <Postflop handleChange={this.handleChange}
           handleBet={this.handleBet}
           dealCards={this.dealCards}
           evaluateCards={this.evaluateCards}
           playerMove={this.state.playerMove}
+          stage={this.state.stage}
           potsize={potsize}
           chips={chips}
           user={user}
@@ -426,13 +482,15 @@ villainFolds(){
           inputValue={this.state.inputValue}
           lowerbet={this.state.lowerbet}
           communitycards={this.state.communitycards}
+          turn={this.state.turn}
+          river={this.state.river}
           yourcards={this.state.yourcards}
           villaincards={this.state.villaincards}
           result={this.state.result}/> : null}
-       {this.state.result ? (<div>
-          <h2>{this.state.result}</h2>
-       </div>) : null}
-      </div>
+            {this.state.result ? (<div>
+                <h2>{this.state.result}</h2>
+            </div>) : null}
+            </div>
     )
   }
 };

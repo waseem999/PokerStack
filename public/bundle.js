@@ -32461,14 +32461,14 @@
 	          return newState;
 	        });
 	      } else {
-	        this.setState(function (state) {
-	          var newState = Object.assign({}, state, {
-	            playerMove: false,
+	        this.setState(function (prevState, props) {
+	          var newState = Object.assign({}, prevState, { playerMove: false,
 	            playerhasActed: true,
 	            playerAction: "check"
 	          });
 	          return newState;
 	        });
+	        console.log("THIS IS THE STATE AFTER HANDLE CHECK!", this.state);
 	      }
 	    }
 	  }, {
@@ -32520,11 +32520,12 @@
 	    value: function evaluateCards() {
 	      var _this3 = this;
 	
-	      //if (this.state.stage===1){}
-	      console.log("do we get here?");
 	      var playerhand = this.state.yourcards.concat(this.state.communitycards);
 	      var villainhand = this.state.villaincards.concat(this.state.communitycards);
-	      var playerhandstrengtharray = [];
+	      if (this.state.stage === 2) {
+	        playerhand = playerhand.concat(this.state.turn);
+	        villainhand = villainhand.concat(this.state.turn);
+	      }
 	      var playerhandstrength = 1;
 	      var villainhandstrength = 1;
 	      var result = "";
@@ -32619,7 +32620,7 @@
 	    value: function villainPreflopMove() {
 	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
 	        this.villainBets(25);
-	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction === "bet") {
+	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction === "bet") {
 	        this.villainCalls();
 	      } else if (this.state.playerAction === "bet") {
 	        this.villainFolds();
@@ -32627,14 +32628,11 @@
 	        this.villainChecks();
 	      }
 	    }
-	
-	    //LEFT OFF HERE EVALUATIING WHAT TO DO POST-FLOP!!!!
-	
 	  }, {
 	    key: 'villainPostflopMove',
 	    value: function villainPostflopMove() {
+	      console.log("this.state", this.state);
 	      var playerAction = this.state.playerAction;
-	      console.log("PAIRS??", this.state.villainPairs);
 	      if (this.state.villainPairs[0]) {
 	        var villainpairs = this.state.villainPairs;
 	        if (villainpairs.length > 2) {
@@ -32645,9 +32643,46 @@
 	      } else if (playerAction == "bet") {
 	        this.villainFolds();
 	      } else if (playerAction == "check") {
-	        console.log("checkssss????");
 	        this.villainChecks();
 	      }
+	    }
+	  }, {
+	    key: 'villainTurnMove',
+	    value: function villainTurnMove() {
+	      console.log("DO I GET HERE WITH A CHECK ON THE TURN???", this.state);
+	      var playerAction = this.state.playerAction;
+	      if (this.state.villainPairs[0] && this.state.playerAction !== "call") {
+	        var villainpairs = this.state.villainPairs;
+	        if (villainpairs.length >= 2) {
+	          this.villainBets(Math.floor(this.props.potsize / 1.5));
+	        }
+	      } else if (playerAction == "bet") {
+	        this.villainFolds();
+	      } else {
+	        this.villainChecks();
+	      }
+	    }
+	  }, {
+	    key: 'villainRiverMove',
+	    value: function villainRiverMove() {
+	      var playerAction = this.state.playerAction;
+	      if (this.state.villainPairs[0]) {
+	        var villainpairs = this.state.villainPairs;
+	        if (villainpairs.length > 2) {
+	          this.villainBets(this.props.potsize);
+	        } else if (villainpairs.length === 2) {
+	          this.villainBets(Math.floor(this.props.potsize / 2));
+	        }
+	      } else if (playerAction == "bet") {
+	        this.villainFolds();
+	      } else if (playerAction == "check") {
+	        this.villainChecks();
+	      }
+	    }
+	  }, {
+	    key: 'showDown',
+	    value: function showDown() {
+	      console.log("THIS is the State at showdown", this.state);
 	    }
 	  }, {
 	    key: 'heuristic',
@@ -32658,13 +32693,20 @@
 	      if (this.state.stage === 1) {
 	        this.villainPostflopMove();
 	      }
+	      if (this.state.stage === 2) {
+	        this.villainTurnMove();
+	      }
+	      if (this.state.stage === 3) {
+	        this.villainRiverMove();
+	        this.showDown();
+	      }
 	    }
 	  }, {
 	    key: 'villainCalls',
 	    value: function villainCalls() {
 	      var _this4 = this;
 	
-	      this.props.logBetAmount(this.props.potsize);
+	      this.props.logBetAmount(this.props.potsize + this.state.currentBet);
 	      var reducedbet = this.props.villainchips - this.state.currentBet;
 	      this.props.modifyVillainChips(reducedbet);
 	      this.setState(function (state) {
@@ -32683,6 +32725,7 @@
 	  }, {
 	    key: 'villainChecks',
 	    value: function villainChecks() {
+	      console.log("VILLAIN CHECKS STATE", this.state);
 	      var stage = this.state.stage + 1;
 	      this.setState(function (state) {
 	        var newState = Object.assign({}, state, {
@@ -32722,6 +32765,8 @@
 	        });
 	        return newState;
 	      });
+	      this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	      this.props.logBetAmount(0);
 	    }
 	  }, {
 	    key: 'dealCards',
@@ -32758,7 +32803,7 @@
 	            villainHearts: [],
 	            villainDiamonds: [],
 	            villainClubs: []
-	          }, _defineProperty(_Object$assign, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign, 'communitycards', cards.data.slice(4)), _defineProperty(_Object$assign, 'playerMove', true), _Object$assign));
+	          }, _defineProperty(_Object$assign, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign, 'communitycards', cards.data.slice(4, 7)), _defineProperty(_Object$assign, 'turn', cards.data.slice(7, 8)), _defineProperty(_Object$assign, 'river', cards.data.slice(8)), _defineProperty(_Object$assign, 'playerMove', true), _Object$assign));
 	          return newState;
 	        });
 	      }).then(function () {
@@ -32796,11 +32841,12 @@
 	          villaincards: this.state.villaincards,
 	          result: this.state.result
 	        }),
-	        this.state.stage === 1 ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
+	        this.state.stage > 0 ? _react2.default.createElement(_Postflop2.default, { handleChange: this.handleChange,
 	          handleBet: this.handleBet,
 	          dealCards: this.dealCards,
 	          evaluateCards: this.evaluateCards,
 	          playerMove: this.state.playerMove,
+	          stage: this.state.stage,
 	          potsize: potsize,
 	          chips: chips,
 	          user: user,
@@ -32808,6 +32854,8 @@
 	          inputValue: this.state.inputValue,
 	          lowerbet: this.state.lowerbet,
 	          communitycards: this.state.communitycards,
+	          turn: this.state.turn,
+	          river: this.state.river,
 	          yourcards: this.state.yourcards,
 	          villaincards: this.state.villaincards,
 	          result: this.state.result }) : null,
@@ -33043,6 +33091,7 @@
 	});
 	
 	exports.default = function (props) {
+	    console.log("PROPS!", props);
 	    return _react2.default.createElement(
 	        "div",
 	        null,
@@ -33073,7 +33122,9 @@
 	                        null,
 	                        _react2.default.createElement("img", { src: props.communitycards[0].image, className: "Image-logo" }),
 	                        _react2.default.createElement("img", { src: props.communitycards[1].image, className: "Image-logo" }),
-	                        _react2.default.createElement("img", { src: props.communitycards[2].image, className: "Image-logo" })
+	                        _react2.default.createElement("img", { src: props.communitycards[2].image, className: "Image-logo" }),
+	                        props.stage > 1 ? _react2.default.createElement("img", { src: props.turn[0].image, className: "Image-logo" }) : null,
+	                        props.stage >= 3 ? _react2.default.createElement("img", { src: props.river[0].image, className: "Image-logo" }) : null
 	                    )
 	                )
 	            )
