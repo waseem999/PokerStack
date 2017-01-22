@@ -26,7 +26,7 @@ module.exports = db.define('cards', {
         let cardsarr = [];
         let numberarray = [];
         let i = 0;
-        while (i < 7){
+        while (i < 9){
         let randomNumber = Math.ceil((Math.random()*52));
                 if (numberarray.indexOf(randomNumber) === -1){
                     numberarray.push(randomNumber);

@@ -4,10 +4,10 @@ import React from 'react';
 export default function (props) {
 return (
       <div className="row">
-          <div className="col-xs-12 col-sm-12">
+          <div className="col-xs-12 col-sm-12" style={{ textAlign: "center"}}>
             <h1>Poker</h1>
           </div>
-          <div className="col-xs-12 col-sm-12">
+          <div className="col-xs-12 col-sm-12" style={{ textAlign: "center"}}>
                   <form onSubmit={props.handleBet} className="form-inline">
                     <div className="form-group">
                       <label className="sr-only" htmlFor="bet">Bet</label>
@@ -33,7 +33,7 @@ return (
           {
             props.lowerbet ? <strong>REDUCE YOUR BET AMOUNT</strong> : null
             }
-              <div style={{ fontSize: "1.2em" }}>
+              <div style={{ fontSize: "1.2em", textAlign:"center"}}>
                   <div>
                     <strong>Pot Size: {props.potsize}</strong>
                   </div>
@@ -46,14 +46,15 @@ return (
                   {
                     props.playerMove ? (<div><strong>Your turn - Bet, Check or Fold</strong>
                   </div>) : null}
+                  <div></div>
               </div>       
                         
-            <div>
+            <div style={{backgroundColor : "#9ACD32"}}>
                {
                props.yourcards[0] && 
                       (
                        <table width="700">
-                          <thead>
+                          <thead style={{fontSize: "1.1em"}}>
                                 <tr>
                                   <th>Your Cards</th>
                                   <th>Villain Cards</th>
@@ -70,12 +71,7 @@ return (
                       )
                }
             </div>
-            <div>
-            <button className="btn-sm btn-custom" onClick={props.dealCards}>
-              <span className="hidden-xs">New Game</span>
-            </button>
-            <button type="submit" className="btn-sm btn-custom" 
-                  onClick={ () => {location.href = '/'}}>Exit Game</button>   
+            <div> 
             </div>
         </div>
 
