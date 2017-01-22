@@ -46,6 +46,7 @@ export default class Game extends Component {
     this.dealCards = this.dealCards.bind(this);
     this.evaluateCards = this.evaluateCards.bind(this);
     this.handlePairs = this.handlePairs.bind(this);
+    this.villainMove = this.villainMove.bind(this);
     }
 
 
@@ -56,12 +57,15 @@ export default class Game extends Component {
   }
 
 handlePairs(actor, handfilter){
-  this.setState(state => {
-    const newState = Object.assign({}, state, {
-          [actor] : { [handfilter[0].face] : handfilter}
-            })
-  return newState;
-  })
+  // this.setState(state => {
+  //   const newState = Object.assign({}, state, {
+  //         [actor] : { [handfilter[0].face] : handfilter}
+  //           })
+
+    this.setState((prevState, props) => ({
+       [actor] : handfilter
+    }));
+      
 }
 
 
@@ -116,19 +120,21 @@ handleBet(e) {
          playerMove: false,
          playerhasActed : true,
          currentBet: bet,
-         playerAction: "bet"
+         playerAction: "bet",
+         inputValue : 0
        });
-      this.props.logBetAmount(bet);
+      let pottotal = this.props.potsize + bet;
+      this.props.logBetAmount(pottotal);
       reducedbet = this.props.chips - bet;
       this.props.modifyUserChips(reducedbet);
-        this.setState({
-          inputValue : 0
-        })
     }
   }
 
 villainMove(){
   if(!this.state.playerMove && this.state.playerhasActed && this.state.playerAction !== "call"){
+    this.setState({
+         playerMove: true
+       })
     this.heuristic()
   }
 }
@@ -142,6 +148,7 @@ componentDidUpdate(){
 
 evaluateCards(){
   //if (this.state.stage===1){}
+  console.log("do we get here?")
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
   let playerhandstrengtharray = [];
@@ -160,6 +167,7 @@ evaluateCards(){
     }
 
     for (let i = 0; i < villainhand.length; i++){
+      
       let villainhandfilter = villainhand.filter((val, index)=>{
                 return val.face===villainhand[i].face;
           });
@@ -229,19 +237,7 @@ evaluateCards(){
 
 villainPreflopMove(){
      if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
-        let betamount = 25;
-         this.props.logBetAmount(this.props.potsize + betamount);
-        let reducedbet = this.props.villainchips - betamount - this.state.currentBet;
-        this.props.modifyVillainChips(reducedbet);
-        this.setState(state => {
-          const newState = Object.assign({}, state, {
-              playerMove: true,
-              currentBet : betamount,
-              villainAction : "bet"
-          })
-          return newState;
-        })
-        alert("VILLAIN BET " + betamount);
+        this.villainBets(25)
       }
       else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 17 && this.state.playerAction==="bet"){
         this.villainCalls()
@@ -256,11 +252,25 @@ villainPreflopMove(){
       }
 }
 
+//LEFT OFF HERE EVALUATIING WHAT TO DO POST-FLOP!!!!
 villainPostflopMove(){
-  if(this.state.villainPairs){
-    for (var keys in this.state.villainPairs){
-      
+  let playerAction = this.state.playerAction;
+  console.log("PAIRS??", this.state.villainPairs)
+  if(this.state.villainPairs[0]){
+    var villainpairs = this.state.villainPairs;
+    if (villainpairs.length > 2){
+      this.villainBets(this.props.potsize - 20)
     }
+    else if (villainpairs.length === 2){
+      this.villainBets(Math.floor(this.props.potsize / 2))
+    }
+  }
+  else if (playerAction=="bet"){
+    this.villainFolds()
+  }
+  else if (playerAction=="check"){
+    console.log("checkssss????")
+    this.villainChecks()
   }
 }
 
@@ -287,8 +297,8 @@ villainCalls(){
       })
         return newState;
   })
-  alert("VILLAIN CALLS");
   this.evaluateCards();
+  alert("VILLAIN CALLS");
 }
 
 villainChecks(){
@@ -300,8 +310,24 @@ villainChecks(){
           })
           return newState;
         })
-  alert("VILLAIN CHECKS");
   this.evaluateCards();
+  alert("VILLAIN CHECKS");
+
+}
+
+villainBets(bet){
+  this.props.logBetAmount(this.props.potsize + bet);
+  let reducedbet = this.props.villainchips - bet - this.state.currentBet;
+  this.props.modifyVillainChips(reducedbet);
+  this.setState(state => {
+          const newState = Object.assign({}, state, {
+              playerMove: true,
+              currentBet : bet,
+              villainAction : "bet"
+          })
+          return newState;
+        })
+  alert("VILLAIN BET " + bet);
 }
 
 villainFolds(){
@@ -355,7 +381,7 @@ villainFolds(){
           })
         })
         .then(()=> {
-          
+          this.props.logBetAmount(0);
         })
   }
 
