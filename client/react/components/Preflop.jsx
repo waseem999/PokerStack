@@ -27,7 +27,7 @@ return (
                 <button type="submit" className="btn-sm btn-custom" onClick={props.handleCheck}>Call {props.currentBet}</button>) :
                 (<button type="submit" className="btn-sm btn-custom" onClick={props.handleCheck}>Check</button>)
                  }
-                  <button type="submit" className="btn-sm btn-custom">Fold</button>
+                  <button type="submit" className="btn-sm btn-custom" onClick={props.handleFold}>Fold</button>
           </div>
           
           {
@@ -63,8 +63,8 @@ return (
                           <tbody>
                                   <tr>
                                     <td><img src={props.yourcards[0].image} className="Image-logo"/><img src={props.yourcards[1].image} className="Image-logo"/></td>
-                                 
-                                    <td><img src={props.villaincards[0].image} className="Image-logo"/><img src={props.villaincards[1].image} className="Image-logo"/></td>
+                                    {!props.result ? (<td><img src={"stylesheets/playingcards/card.jpeg"} className="Image-logo"/><img src={"stylesheets/playingcards/card.jpeg"} className="Image-logo"/></td>) :
+                                    (<td><img src={props.villaincards[0].image} className="Image-logo"/><img src={props.villaincards[1].image} className="Image-logo"/></td>)}
                                   </tr>
                           </tbody>
                   </table>

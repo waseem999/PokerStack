@@ -16,7 +16,7 @@ export default class Game extends Component {
       river: [],
       yourcards: [],
       villaincards: [],
-      result : "",
+      result : null,
       stage: 0,
       playerMove : false,
       showmovebuttons: false,
@@ -41,6 +41,7 @@ export default class Game extends Component {
 
 
     this.handleBet = this.handleBet.bind(this);
+    this.handleFold = this.handleFold.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.dealCards = this.dealCards.bind(this);
@@ -57,14 +58,18 @@ export default class Game extends Component {
   }
 
 handlePairs(actor, handfilter){
+  console.log("THIS IS WHY I AM IN HANDLEPAIRS, the actor!", actor)
+  console.log("AND THE HANDFILTER!", handfilter)
   // this.setState(state => {
   //   const newState = Object.assign({}, state, {
   //         [actor] : { [handfilter[0].face] : handfilter}
   //           })
-
-    this.setState((prevState, props) => ({
-       [actor] : handfilter
-    }));
+    this.setState((prevState, props) => {
+       const newState = Object.assign({}, prevState, {[actor] : handfilter
+    });
+    return newState;
+      })
+    
     console.log("I WAS IN HANDLEPAIRS and this is the state", this.state)
       
 }
@@ -97,8 +102,14 @@ handleCheck(e) {
       })
       return newState;
       })
-    console.log("THIS IS THE STATE AFTER HANDLE CHECK!", this.state)
   }
+}
+
+handleFold(e){
+  this.calculateWinnersChips("villain");
+  this.setState({
+  result : "Villain wins!!"
+ })
 }
 
 handleBet(e) {
@@ -142,6 +153,9 @@ villainMove(){
 
 componentDidUpdate(){
 		this.villainMove();
+    if (this.state.stage === 4){
+      this.showDown();
+    }
 	}
 
 
@@ -149,12 +163,15 @@ componentDidUpdate(){
 evaluateCards(){
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
-  if (this.state.stage===2){
+  if (this.state.stage > 1){
   playerhand = playerhand.concat(this.state.turn);
   villainhand = villainhand.concat(this.state.turn);
   }
-  let playerhandstrength = 1;
-  let villainhandstrength = 1;
+  if (this.state.stage > 2){
+  playerhand = playerhand.concat(this.state.river);
+  villainhand = villainhand.concat(this.state.river);
+  }
+
   let result = "";
 
     for (let i = 0; i < playerhand.length; i++){
@@ -172,7 +189,6 @@ evaluateCards(){
       let villainhandfilter = villainhand.filter((val, index)=>{
                 return val.face===villainhand[i].face;
           });
-      villainhandfilter.length > 1 ? villainhandstrength = villainhandfilter.length : null;
       if(villainhandfilter.length > 1){
         this.handlePairs("villainPairs", villainhandfilter);
       }
@@ -257,66 +273,60 @@ villainRiverMove(){
 }
 
 calculateWinnersChips(player){
-  
+  if (player==="user"){
+    this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2))
+  }
+  else {
+    this.props.modifyVillainChips(this.props.chips + (this.props.potsize * 2))
+  }
+    this.props.logBetAmount(0)
 }
 
 showDown(){
+  let result = "";
+  let stage = this.state.stage + 1;
   console.log("THIS is the State at showdown", this.state);
-  switch (this.state) {
-    case 4:
-        if (this.state.villainPairs > this.state.playerPairs){
-          if (this.state.villainPairs===4){
-          result = "Villain wins with 4 of a kind!!"
+        if (this.state.villainPairs.length > this.state.playerPairs.length){
+          if (this.state.villainPairs.length===4){
+          result = "Villain wins with 4 of a kind!!";
+          this.calculateWinnersChips("villain");
+          }
+          else if (this.state.villainPairs.length===3){
+            result = "Villain wins with 3 of a kind!!";
+            this.calculateWinnersChips("villain");
+          }
+          else if (this.state.villainPairs.length===2){
+            result = "Villain wins with a pair!!";
+            this.calculateWinnersChips("villain");
           }
         }
-        else {
-          result = "You have 4 of a kind, you win!";
-          this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        if (this.state.playerPairs.length > this.state.villainPairs.length){
+          if (this.state.playerPairs.length===4){
+          result = "You win with 4 of a kind!!";
+          this.calculateWinnersChips("user");
+          }
+          else if (this.state.playerPairs.length===3){
+            result = "You win with 3 of a kind!!";
+            this.calculateWinnersChips("user");
+          }
+          else if (this.state.playerPairs.length===2){
+            result = "You win with a pair!!";
+            this.calculateWinnersChips("user");
+          }
         }
-        break;
-    case 3:
-     if (villainhandstrength===3){
-          result = "tie!"
+        else if (this.state.villainPairs.length===this.state.playerPairs.length){
+          if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
+             result = "Villain's kicker wins!!";
+            this.calculateWinnersChips("villain");
+          }
+          else {
+            result = "Player's kicker wins!!";
+            this.calculateWinnersChips("user");
+          }
         }
-    else if (villainhandstrength > 3){
-          result = "villain wins!";
-           this.props.logBetAmount(0);
-        }
-    else {
-        result = "You have 3 of a kind, you win!";
-        this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-        this.props.logBetAmount(0);
-      }
-        break;
-    case 2:
-       if (villainhandstrength===2){
-          result = "tie!"
-        }
-      else if (villainhandstrength > 2){
-          result = "villain wins!";
-          this.props.logBetAmount(0);
-        }
-    else {
-        result = "You have a pair, you win!";
-        this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-        this.props.logBetAmount(0);
-      }
-        break;
-    case 1:
-        if (villainhandstrength===1){
-          result = "tie!"
-        }
-      else if (villainhandstrength===2){
-          result = "villain wins with a pair!";
-           this.props.logBetAmount(0);
-        }
-      else {
-          result = "villain wins!";
-           this.props.logBetAmount(0);
-        }
-        break;
-  }
+  console.log("RESULT???", result)
  this.setState({
+   stage: stage,
    result : result
  })
 
@@ -335,7 +345,6 @@ heuristic(){
     }
     if(this.state.stage===3){
       this.villainRiverMove();
-      this.showDown();
     }
 }
 
@@ -414,7 +423,7 @@ villainFolds(){
             river: [],
             yourcards: [],
             villaincards: [],
-            result : "",
+            result : null,
             stage: 0,
             playerMove : false,
             showmovebuttons: false,
@@ -460,6 +469,7 @@ villainFolds(){
           handleChange={this.handleChange}
           handleCheck={this.handleCheck}
           handleBet={this.handleBet}
+          handleFold={this.handleFold}
           dealCards={this.dealCards}
           evaluateCards={this.evaluateCards}
           potsize={potsize}
@@ -480,6 +490,7 @@ villainFolds(){
           handleBet={this.handleBet}
           dealCards={this.dealCards}
           evaluateCards={this.evaluateCards}
+          handleFold={this.handleFold}
           playerMove={this.state.playerMove}
           stage={this.state.stage}
           potsize={potsize}
