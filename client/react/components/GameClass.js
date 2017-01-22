@@ -65,6 +65,7 @@ handlePairs(actor, handfilter){
     this.setState((prevState, props) => ({
        [actor] : handfilter
     }));
+    console.log("I WAS IN HANDLEPAIRS and this is the state", this.state)
       
 }
 
@@ -176,64 +177,7 @@ evaluateCards(){
         this.handlePairs("villainPairs", villainhandfilter);
       }
     }
-  
- 
 
-// switch (playerhandstrength) {
-//     case 4:
-//         if (villainhandstrength===4){
-//           result = "tie!"
-//         }
-//         else {
-//           result = "You have 4 of a kind, you win!";
-//           this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-//         }
-//         break;
-//     case 3:
-//      if (villainhandstrength===3){
-//           result = "tie!"
-//         }
-//     else if (villainhandstrength > 3){
-//           result = "villain wins!";
-//            this.props.logBetAmount(0);
-//         }
-//     else {
-//         result = "You have 3 of a kind, you win!";
-//         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-//         this.props.logBetAmount(0);
-//       }
-//         break;
-//     case 2:
-//        if (villainhandstrength===2){
-//           result = "tie!"
-//         }
-//       else if (villainhandstrength > 2){
-//           result = "villain wins!";
-//           this.props.logBetAmount(0);
-//         }
-//     else {
-//         result = "You have a pair, you win!";
-//         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-//         this.props.logBetAmount(0);
-//       }
-//         break;
-//     case 1:
-//         if (villainhandstrength===1){
-//           result = "tie!"
-//         }
-//       else if (villainhandstrength===2){
-//           result = "villain wins with a pair!";
-//            this.props.logBetAmount(0);
-//         }
-//       else {
-//           result = "villain wins!";
-//            this.props.logBetAmount(0);
-//         }
-//         break;
-//   }
-//  this.setState({
-//    result : result
-//  })
 }
 
 villainPreflopMove(){
@@ -259,10 +203,10 @@ villainPostflopMove(){
   if(this.state.villainPairs[0]){
     var villainpairs = this.state.villainPairs;
     if (villainpairs.length > 2){
-      this.villainBets(this.props.potsize - 20)
+      this.villainBets(Math.floor(this.props.potsize / 2) + 10)
     }
     else if (villainpairs.length === 2){
-      this.villainBets(Math.floor(this.props.potsize / 2))
+      this.villainBets(Math.floor(this.props.potsize / 2) + 10)
     }
   }
   else if (playerAction=="bet"){
@@ -274,7 +218,6 @@ villainPostflopMove(){
 }
 
 villainTurnMove(){
-  console.log("DO I GET HERE WITH A CHECK ON THE TURN???", this.state);
   let playerAction = this.state.playerAction;
   if(this.state.villainPairs[0] && this.state.playerAction!=="call"){
     var villainpairs = this.state.villainPairs;
@@ -290,7 +233,9 @@ villainTurnMove(){
   }
 }
 
+checkForFlush(){
 
+}
 
 villainRiverMove(){
   let playerAction = this.state.playerAction;
@@ -311,8 +256,70 @@ villainRiverMove(){
   }
 }
 
+calculateWinnersChips(player){
+  
+}
+
 showDown(){
-  console.log("THIS is the State at showdown", this.state)
+  console.log("THIS is the State at showdown", this.state);
+  switch (this.state) {
+    case 4:
+        if (this.state.villainPairs > this.state.playerPairs){
+          if (this.state.villainPairs===4){
+          result = "Villain wins with 4 of a kind!!"
+          }
+        }
+        else {
+          result = "You have 4 of a kind, you win!";
+          this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        }
+        break;
+    case 3:
+     if (villainhandstrength===3){
+          result = "tie!"
+        }
+    else if (villainhandstrength > 3){
+          result = "villain wins!";
+           this.props.logBetAmount(0);
+        }
+    else {
+        result = "You have 3 of a kind, you win!";
+        this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        this.props.logBetAmount(0);
+      }
+        break;
+    case 2:
+       if (villainhandstrength===2){
+          result = "tie!"
+        }
+      else if (villainhandstrength > 2){
+          result = "villain wins!";
+          this.props.logBetAmount(0);
+        }
+    else {
+        result = "You have a pair, you win!";
+        this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+        this.props.logBetAmount(0);
+      }
+        break;
+    case 1:
+        if (villainhandstrength===1){
+          result = "tie!"
+        }
+      else if (villainhandstrength===2){
+          result = "villain wins with a pair!";
+           this.props.logBetAmount(0);
+        }
+      else {
+          result = "villain wins!";
+           this.props.logBetAmount(0);
+        }
+        break;
+  }
+ this.setState({
+   result : result
+ })
+
 }
 
 
@@ -487,10 +494,17 @@ villainFolds(){
           yourcards={this.state.yourcards}
           villaincards={this.state.villaincards}
           result={this.state.result}/> : null}
-            {this.state.result ? (<div>
+            {this.state.result ? (<div style={{ textAlign: "center"}}>
                 <h2>{this.state.result}</h2>
             </div>) : null}
+            <div style={{ textAlign: "center"}}>
+                  <button className="btn-sm btn-custom" onClick={this.dealCards}>
+                          <span className="hidden-xs">New Game</span>
+                        </button>
+                  <button type="submit" className="btn-sm btn-custom" 
+                        onClick={ () => {location.href = '/'}}>Exit Game</button>  
             </div>
+      </div>
     )
   }
 };

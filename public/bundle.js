@@ -32437,6 +32437,7 @@
 	      this.setState(function (prevState, props) {
 	        return _defineProperty({}, actor, handfilter);
 	      });
+	      console.log("I WAS IN HANDLEPAIRS and this is the state", this.state);
 	    }
 	  }, {
 	    key: 'handleCheck',
@@ -32558,62 +32559,6 @@
 	      for (var i = 0; i < villainhand.length; i++) {
 	        _loop2(i);
 	      }
-	
-	      // switch (playerhandstrength) {
-	      //     case 4:
-	      //         if (villainhandstrength===4){
-	      //           result = "tie!"
-	      //         }
-	      //         else {
-	      //           result = "You have 4 of a kind, you win!";
-	      //           this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-	      //         }
-	      //         break;
-	      //     case 3:
-	      //      if (villainhandstrength===3){
-	      //           result = "tie!"
-	      //         }
-	      //     else if (villainhandstrength > 3){
-	      //           result = "villain wins!";
-	      //            this.props.logBetAmount(0);
-	      //         }
-	      //     else {
-	      //         result = "You have 3 of a kind, you win!";
-	      //         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-	      //         this.props.logBetAmount(0);
-	      //       }
-	      //         break;
-	      //     case 2:
-	      //        if (villainhandstrength===2){
-	      //           result = "tie!"
-	      //         }
-	      //       else if (villainhandstrength > 2){
-	      //           result = "villain wins!";
-	      //           this.props.logBetAmount(0);
-	      //         }
-	      //     else {
-	      //         result = "You have a pair, you win!";
-	      //         this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
-	      //         this.props.logBetAmount(0);
-	      //       }
-	      //         break;
-	      //     case 1:
-	      //         if (villainhandstrength===1){
-	      //           result = "tie!"
-	      //         }
-	      //       else if (villainhandstrength===2){
-	      //           result = "villain wins with a pair!";
-	      //            this.props.logBetAmount(0);
-	      //         }
-	      //       else {
-	      //           result = "villain wins!";
-	      //            this.props.logBetAmount(0);
-	      //         }
-	      //         break;
-	      //   }
-	      //  this.setState({
-	      //    result : result
-	      //  })
 	    }
 	  }, {
 	    key: 'villainPreflopMove',
@@ -32636,9 +32581,9 @@
 	      if (this.state.villainPairs[0]) {
 	        var villainpairs = this.state.villainPairs;
 	        if (villainpairs.length > 2) {
-	          this.villainBets(this.props.potsize - 20);
+	          this.villainBets(Math.floor(this.props.potsize / 2) + 10);
 	        } else if (villainpairs.length === 2) {
-	          this.villainBets(Math.floor(this.props.potsize / 2));
+	          this.villainBets(Math.floor(this.props.potsize / 2) + 10);
 	        }
 	      } else if (playerAction == "bet") {
 	        this.villainFolds();
@@ -32649,7 +32594,6 @@
 	  }, {
 	    key: 'villainTurnMove',
 	    value: function villainTurnMove() {
-	      console.log("DO I GET HERE WITH A CHECK ON THE TURN???", this.state);
 	      var playerAction = this.state.playerAction;
 	      if (this.state.villainPairs[0] && this.state.playerAction !== "call") {
 	        var villainpairs = this.state.villainPairs;
@@ -32662,6 +32606,9 @@
 	        this.villainChecks();
 	      }
 	    }
+	  }, {
+	    key: 'checkForFlush',
+	    value: function checkForFlush() {}
 	  }, {
 	    key: 'villainRiverMove',
 	    value: function villainRiverMove() {
@@ -32680,9 +32627,62 @@
 	      }
 	    }
 	  }, {
+	    key: 'calculateWinnersChips',
+	    value: function calculateWinnersChips(player) {}
+	  }, {
 	    key: 'showDown',
 	    value: function showDown() {
 	      console.log("THIS is the State at showdown", this.state);
+	      switch (this.state) {
+	        case 4:
+	          if (this.state.villainPairs > this.state.playerPairs) {
+	            if (this.state.villainPairs === 4) {
+	              result = "Villain wins with 4 of a kind!!";
+	            }
+	          } else {
+	            result = "You have 4 of a kind, you win!";
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	          }
+	          break;
+	        case 3:
+	          if (villainhandstrength === 3) {
+	            result = "tie!";
+	          } else if (villainhandstrength > 3) {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          } else {
+	            result = "You have 3 of a kind, you win!";
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	            this.props.logBetAmount(0);
+	          }
+	          break;
+	        case 2:
+	          if (villainhandstrength === 2) {
+	            result = "tie!";
+	          } else if (villainhandstrength > 2) {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          } else {
+	            result = "You have a pair, you win!";
+	            this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
+	            this.props.logBetAmount(0);
+	          }
+	          break;
+	        case 1:
+	          if (villainhandstrength === 1) {
+	            result = "tie!";
+	          } else if (villainhandstrength === 2) {
+	            result = "villain wins with a pair!";
+	            this.props.logBetAmount(0);
+	          } else {
+	            result = "villain wins!";
+	            this.props.logBetAmount(0);
+	          }
+	          break;
+	      }
+	      this.setState({
+	        result: result
+	      });
 	    }
 	  }, {
 	    key: 'heuristic',
@@ -32861,13 +32861,34 @@
 	          result: this.state.result }) : null,
 	        this.state.result ? _react2.default.createElement(
 	          'div',
-	          null,
+	          { style: { textAlign: "center" } },
 	          _react2.default.createElement(
 	            'h2',
 	            null,
 	            this.state.result
 	          )
-	        ) : null
+	        ) : null,
+	        _react2.default.createElement(
+	          'div',
+	          { style: { textAlign: "center" } },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'btn-sm btn-custom', onClick: this.dealCards },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'hidden-xs' },
+	              'New Game'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'submit', className: 'btn-sm btn-custom',
+	              onClick: function onClick() {
+	                location.href = '/';
+	              } },
+	            'Exit Game'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -32897,7 +32918,7 @@
 	    { className: "row" },
 	    _react2.default.createElement(
 	      "div",
-	      { className: "col-xs-12 col-sm-12" },
+	      { className: "col-xs-12 col-sm-12", style: { textAlign: "center" } },
 	      _react2.default.createElement(
 	        "h1",
 	        null,
@@ -32906,7 +32927,7 @@
 	    ),
 	    _react2.default.createElement(
 	      "div",
-	      { className: "col-xs-12 col-sm-12" },
+	      { className: "col-xs-12 col-sm-12", style: { textAlign: "center" } },
 	      _react2.default.createElement(
 	        "form",
 	        { onSubmit: props.handleBet, className: "form-inline" },
@@ -32959,7 +32980,7 @@
 	    ) : null,
 	    _react2.default.createElement(
 	      "div",
-	      { style: { fontSize: "1.2em" } },
+	      { style: { fontSize: "1.2em", textAlign: "center" } },
 	      _react2.default.createElement(
 	        "div",
 	        null,
@@ -32999,17 +33020,18 @@
 	          null,
 	          "Your turn - Bet, Check or Fold"
 	        )
-	      ) : null
+	      ) : null,
+	      _react2.default.createElement("div", null)
 	    ),
 	    _react2.default.createElement(
 	      "div",
-	      null,
+	      { style: { backgroundColor: "#9ACD32" } },
 	      props.yourcards[0] && _react2.default.createElement(
 	        "table",
 	        { width: "700" },
 	        _react2.default.createElement(
 	          "thead",
-	          null,
+	          { style: { fontSize: "1.1em" } },
 	          _react2.default.createElement(
 	            "tr",
 	            null,
@@ -33047,27 +33069,7 @@
 	        )
 	      )
 	    ),
-	    _react2.default.createElement(
-	      "div",
-	      null,
-	      _react2.default.createElement(
-	        "button",
-	        { className: "btn-sm btn-custom", onClick: props.dealCards },
-	        _react2.default.createElement(
-	          "span",
-	          { className: "hidden-xs" },
-	          "New Game"
-	        )
-	      ),
-	      _react2.default.createElement(
-	        "button",
-	        { type: "submit", className: "btn-sm btn-custom",
-	          onClick: function onClick() {
-	            location.href = '/';
-	          } },
-	        "Exit Game"
-	      )
-	    )
+	    _react2.default.createElement("div", null)
 	  );
 	};
 	
@@ -33094,10 +33096,10 @@
 	    console.log("PROPS!", props);
 	    return _react2.default.createElement(
 	        "div",
-	        null,
+	        { style: { backgroundColor: "#9ACD32", fontSize: "1.1em" } },
 	        _react2.default.createElement(
 	            "table",
-	            null,
+	            { width: "700" },
 	            _react2.default.createElement(
 	                "thead",
 	                null,

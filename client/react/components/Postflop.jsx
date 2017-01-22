@@ -4,8 +4,8 @@ import React from 'react';
 export default function (props) {
 console.log("PROPS!", props)
 return (
-    <div>
-        <table>
+    <div style={{backgroundColor : "#9ACD32", fontSize: "1.1em"}}>
+        <table width="700">
             <thead>
                 <tr><strong>Community Cards</strong></tr>
             </thead>
