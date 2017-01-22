@@ -25,15 +25,8 @@ export default class Game extends Component {
       playerAction: "",
       playerhasActed: false,
       playerPairs : {},
-      playerSpades : [],
-      playerHearts : [],
-      playerDiamonds : [],
-      playerClubs : [],
-      villainPairs : {},
-      villainSpades : [],
-      villainHearts : [],
-      villainDiamonds : [],
-      villainClubs : []
+      playerFlush : [],
+      villainFlush : []
     }
 
     super(props);
@@ -58,8 +51,7 @@ export default class Game extends Component {
   }
 
 handlePairs(actor, handfilter){
-  console.log("THIS IS WHY I AM IN HANDLEPAIRS, the actor!", actor)
-  console.log("AND THE HANDFILTER!", handfilter)
+
   // this.setState(state => {
   //   const newState = Object.assign({}, state, {
   //         [actor] : { [handfilter[0].face] : handfilter}
@@ -69,8 +61,7 @@ handlePairs(actor, handfilter){
     });
     return newState;
       })
-    
-    console.log("I WAS IN HANDLEPAIRS and this is the state", this.state)
+  
       
 }
 
@@ -163,13 +154,35 @@ componentDidUpdate(){
 evaluateCards(){
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
+  let villainflush = this.checkFlush(villainhand);
+  console.log("VILLAINFLUSH", villainflush)
+  if (villainflush){
+     this.setState({
+         villainFlush: villainflush
+       })
+  }
+  
   if (this.state.stage > 1){
   playerhand = playerhand.concat(this.state.turn);
   villainhand = villainhand.concat(this.state.turn);
+  let villainflush = this.checkFlush(villainhand);
+  console.log("VILLAINFLUSH", villainflush)
+  if (villainflush){
+     this.setState({
+         villainFlush: villainflush
+       })
+  }
   }
   if (this.state.stage > 2){
   playerhand = playerhand.concat(this.state.river);
   villainhand = villainhand.concat(this.state.river);
+  let villainflush = this.checkFlush(villainhand);
+  
+  if (villainflush){
+     this.setState({
+         villainFlush: villainflush
+       })
+  }
   }
 
   let result = "";
@@ -197,6 +210,7 @@ evaluateCards(){
 }
 
 villainPreflopMove(){
+
      if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
         this.villainBets(25)
       }
@@ -225,9 +239,14 @@ villainPostflopMove(){
       this.villainBets(Math.floor(this.props.potsize / 2) + 10)
     }
   }
-  else if (playerAction=="bet"){
+  else if (playerAction=="bet" && !this.state.villainFlush[0]){
     this.villainFolds()
   }
+
+  else if (playerAction=="bet" && this.state.villainFlush[0]){
+    this.villainBets(Math.floor(this.props.potsize / 2))
+  }
+
   else if (playerAction=="check"){
     this.villainChecks()
   }
@@ -249,8 +268,29 @@ villainTurnMove(){
   }
 }
 
-checkForFlush(){
-
+checkFlush(cards){
+  let cardobj = {
+    spades : 0,
+    hearts : 0,
+    clubs : 0,
+    diamonds : 0
+  }
+  let flushmade = [];
+  let flushdraw = [];
+  cards.forEach((card)=>{
+    
+    cardobj[card.suit] = cardobj[card.suit] + 1;
+    console.log(cardobj[card.suit])
+    cardobj[card.suit]===5 ? flushmade = ["flush", card] : null;
+    cardobj[card.suit]===4 ? flushdraw = ["flushdraw", card] : null
+  })
+ 
+  if (flushmade[0]) {
+    return flushmade;
+  }
+  if (flushdraw[0]) {
+    return flushdraw;
+  }
 }
 
 villainRiverMove(){
@@ -277,7 +317,7 @@ calculateWinnersChips(player){
     this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2))
   }
   else {
-    this.props.modifyVillainChips(this.props.chips + (this.props.potsize * 2))
+    this.props.modifyVillainChips(this.props.villainchips + (this.props.potsize * 2))
   }
     this.props.logBetAmount(0)
 }
@@ -316,11 +356,11 @@ showDown(){
         }
         else if (this.state.villainPairs.length===this.state.playerPairs.length){
           if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
-             result = "Villain's kicker wins!!";
+             result = "Villain's higher card wins!!";
             this.calculateWinnersChips("villain");
           }
           else {
-            result = "Player's kicker wins!!";
+            result = "Player's higher card wins!!";
             this.calculateWinnersChips("user");
           }
         }
@@ -432,15 +472,9 @@ villainFolds(){
             playerAction: "",
             playerhasActed: false,
             playerPairs : [],
-            playerSpades : [],
-            playerHearts : [],
-            playerDiamonds : [],
-            playerClubs : [],
             villainPairs : [],
-            villainSpades : [],
-            villainHearts : [],
-            villainDiamonds : [],
-            villainClubs : [],
+            playerFlush : [],
+            villainFlush : [],
             yourcards: cards.data.slice(0, 2),
             villaincards: cards.data.slice(2, 4),
             communitycards: cards.data.slice(4, 7),

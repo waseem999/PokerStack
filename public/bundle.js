@@ -32394,15 +32394,8 @@
 	      playerAction: "",
 	      playerhasActed: false,
 	      playerPairs: {},
-	      playerSpades: [],
-	      playerHearts: [],
-	      playerDiamonds: [],
-	      playerClubs: [],
-	      villainPairs: {},
-	      villainSpades: [],
-	      villainHearts: [],
-	      villainDiamonds: [],
-	      villainClubs: []
+	      playerFlush: [],
+	      villainFlush: []
 	    };
 	
 	    var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
@@ -32430,8 +32423,7 @@
 	  }, {
 	    key: 'handlePairs',
 	    value: function handlePairs(actor, handfilter) {
-	      console.log("THIS IS WHY I AM IN HANDLEPAIRS, the actor!", actor);
-	      console.log("AND THE HANDFILTER!", handfilter);
+	
 	      // this.setState(state => {
 	      //   const newState = Object.assign({}, state, {
 	      //         [actor] : { [handfilter[0].face] : handfilter}
@@ -32440,8 +32432,6 @@
 	        var newState = Object.assign({}, prevState, _defineProperty({}, actor, handfilter));
 	        return newState;
 	      });
-	
-	      console.log("I WAS IN HANDLEPAIRS and this is the state", this.state);
 	    }
 	  }, {
 	    key: 'handleCheck',
@@ -32537,13 +32527,35 @@
 	
 	      var playerhand = this.state.yourcards.concat(this.state.communitycards);
 	      var villainhand = this.state.villaincards.concat(this.state.communitycards);
+	      var villainflush = this.checkFlush(villainhand);
+	      console.log("VILLAINFLUSH", villainflush);
+	      if (villainflush) {
+	        this.setState({
+	          villainFlush: villainflush
+	        });
+	      }
+	
 	      if (this.state.stage > 1) {
 	        playerhand = playerhand.concat(this.state.turn);
 	        villainhand = villainhand.concat(this.state.turn);
+	        var _villainflush = this.checkFlush(villainhand);
+	        console.log("VILLAINFLUSH", _villainflush);
+	        if (_villainflush) {
+	          this.setState({
+	            villainFlush: _villainflush
+	          });
+	        }
 	      }
 	      if (this.state.stage > 2) {
 	        playerhand = playerhand.concat(this.state.river);
 	        villainhand = villainhand.concat(this.state.river);
+	        var _villainflush2 = this.checkFlush(villainhand);
+	
+	        if (_villainflush2) {
+	          this.setState({
+	            villainFlush: _villainflush2
+	          });
+	        }
 	      }
 	
 	      var result = "";
@@ -32579,6 +32591,7 @@
 	  }, {
 	    key: 'villainPreflopMove',
 	    value: function villainPreflopMove() {
+	
 	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 22) {
 	        this.villainBets(25);
 	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction === "bet") {
@@ -32601,8 +32614,10 @@
 	        } else if (villainpairs.length === 2) {
 	          this.villainBets(Math.floor(this.props.potsize / 2) + 10);
 	        }
-	      } else if (playerAction == "bet") {
+	      } else if (playerAction == "bet" && !this.state.villainFlush[0]) {
 	        this.villainFolds();
+	      } else if (playerAction == "bet" && this.state.villainFlush[0]) {
+	        this.villainBets(Math.floor(this.props.potsize / 2));
 	      } else if (playerAction == "check") {
 	        this.villainChecks();
 	      }
@@ -32623,8 +32638,31 @@
 	      }
 	    }
 	  }, {
-	    key: 'checkForFlush',
-	    value: function checkForFlush() {}
+	    key: 'checkFlush',
+	    value: function checkFlush(cards) {
+	      var cardobj = {
+	        spades: 0,
+	        hearts: 0,
+	        clubs: 0,
+	        diamonds: 0
+	      };
+	      var flushmade = [];
+	      var flushdraw = [];
+	      cards.forEach(function (card) {
+	
+	        cardobj[card.suit] = cardobj[card.suit] + 1;
+	        console.log(cardobj[card.suit]);
+	        cardobj[card.suit] === 5 ? flushmade = ["flush", card] : null;
+	        cardobj[card.suit] === 4 ? flushdraw = ["flushdraw", card] : null;
+	      });
+	
+	      if (flushmade[0]) {
+	        return flushmade;
+	      }
+	      if (flushdraw[0]) {
+	        return flushdraw;
+	      }
+	    }
 	  }, {
 	    key: 'villainRiverMove',
 	    value: function villainRiverMove() {
@@ -32648,7 +32686,7 @@
 	      if (player === "user") {
 	        this.props.modifyUserChips(this.props.chips + this.props.potsize * 2);
 	      } else {
-	        this.props.modifyVillainChips(this.props.chips + this.props.potsize * 2);
+	        this.props.modifyVillainChips(this.props.villainchips + this.props.potsize * 2);
 	      }
 	      this.props.logBetAmount(0);
 	    }
@@ -32683,10 +32721,10 @@
 	        }
 	      } else if (this.state.villainPairs.length === this.state.playerPairs.length) {
 	        if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value) {
-	          result = "Villain's kicker wins!!";
+	          result = "Villain's higher card wins!!";
 	          this.calculateWinnersChips("villain");
 	        } else {
-	          result = "Player's kicker wins!!";
+	          result = "Player's higher card wins!!";
 	          this.calculateWinnersChips("user");
 	        }
 	      }
@@ -32805,15 +32843,9 @@
 	            playerAction: "",
 	            playerhasActed: false,
 	            playerPairs: [],
-	            playerSpades: [],
-	            playerHearts: [],
-	            playerDiamonds: [],
-	            playerClubs: [],
 	            villainPairs: [],
-	            villainSpades: [],
-	            villainHearts: [],
-	            villainDiamonds: [],
-	            villainClubs: []
+	            playerFlush: [],
+	            villainFlush: []
 	          }, _defineProperty(_Object$assign2, 'yourcards', cards.data.slice(0, 2)), _defineProperty(_Object$assign2, 'villaincards', cards.data.slice(2, 4)), _defineProperty(_Object$assign2, 'communitycards', cards.data.slice(4, 7)), _defineProperty(_Object$assign2, 'turn', cards.data.slice(7, 8)), _defineProperty(_Object$assign2, 'river', cards.data.slice(8)), _defineProperty(_Object$assign2, 'playerMove', true), _Object$assign2));
 	          return newState;
 	        });
