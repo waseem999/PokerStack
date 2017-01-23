@@ -330,16 +330,17 @@ checkFlush(cards){
 }
 
 villainRiverMove(){
+  let villainPairs = this.handlePairs("villain");
+  let playerPairs = this.handlePairs("player");
   let playerAction = this.state.playerAction;
-  if(this.state.villainPairs[0]){
-    var villainpairs = this.state.villainPairs;
-    if (villainpairs.length > 2){
-      this.villainBets(this.props.potsize)
+  if(villainPairs > 1){
+    this.villainBets(this.props.potsize)
     }
-    else if (villainpairs.length === 2){
+    else if (villainPairs === 1){
       this.villainBets(Math.floor(this.props.potsize / 2))
     }
-  }
+
+
   else if (playerAction=="bet"){
     this.villainFolds()
   }

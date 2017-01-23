@@ -32688,14 +32688,13 @@
 	  }, {
 	    key: 'villainRiverMove',
 	    value: function villainRiverMove() {
+	      var villainPairs = this.handlePairs("villain");
+	      var playerPairs = this.handlePairs("player");
 	      var playerAction = this.state.playerAction;
-	      if (this.state.villainPairs[0]) {
-	        var villainpairs = this.state.villainPairs;
-	        if (villainpairs.length > 2) {
-	          this.villainBets(this.props.potsize);
-	        } else if (villainpairs.length === 2) {
-	          this.villainBets(Math.floor(this.props.potsize / 2));
-	        }
+	      if (villainPairs > 1) {
+	        this.villainBets(this.props.potsize);
+	      } else if (villainPairs === 1) {
+	        this.villainBets(Math.floor(this.props.potsize / 2));
 	      } else if (playerAction == "bet") {
 	        this.villainFolds();
 	      } else if (playerAction == "check") {
