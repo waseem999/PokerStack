@@ -26,7 +26,9 @@ export default class Game extends Component {
       playerhasActed: false,
       playerPairs : {},
       playerFlush : [],
-      villainFlush : []
+      villainFlush : [],
+      playerpairsobj: {},
+      villainpairsobj: {}
     }
 
     super(props);
@@ -50,19 +52,31 @@ export default class Game extends Component {
     });
   }
 
-handlePairs(actor, handfilter){
-
-  // this.setState(state => {
-  //   const newState = Object.assign({}, state, {
-  //         [actor] : { [handfilter[0].face] : handfilter}
-  //           })
-    this.setState((prevState, props) => {
-       const newState = Object.assign({}, prevState, {[actor] : handfilter
-    });
-    return newState;
-      })
-  
-      
+handlePairs(player){
+let result = 0;
+let pairvalues=[];
+  player==="villain" ? pairvalues = Object.values(this.state.villainpairsobj) : 
+  pairvalues = Object.values(this.state.playerpairsobj);
+  console.log("THE PAIRVALUES SHOULD be an ARRAY of VALUES!", pairvalues)
+    if (pairvalues.indexOf(4) !== -1){
+      result=5
+    }
+    else if(pairvalues.indexOf(3) !== -1 && pairvalues.indexOf(2) !== -1){
+      result=4
+    }
+    else if(pairvalues.indexOf(3) !== -1){
+      result=3
+    }
+    else if(pairvalues.indexOf(2) !== -1){
+        console.log("IM IN THE pair condition in handlePAIRS!", pairvalues)
+      pairvalues.splice(pairvalues.indexOf(2), 1);
+      console.log("NOW I SPLICED!", pairvalues)
+      if (pairvalues.indexOf(2) !== -1){
+        result=2
+      }
+      else result=1
+    }
+  return result
 }
 
 
@@ -155,7 +169,6 @@ evaluateCards(){
   let playerhand = this.state.yourcards.concat(this.state.communitycards);
   let villainhand = this.state.villaincards.concat(this.state.communitycards);
   let villainflush = this.checkFlush(villainhand);
-  console.log("VILLAINFLUSH", villainflush)
   if (villainflush){
      this.setState({
          villainFlush: villainflush
@@ -166,7 +179,6 @@ evaluateCards(){
   playerhand = playerhand.concat(this.state.turn);
   villainhand = villainhand.concat(this.state.turn);
   let villainflush = this.checkFlush(villainhand);
-  console.log("VILLAINFLUSH", villainflush)
   if (villainflush){
      this.setState({
          villainFlush: villainflush
@@ -187,25 +199,52 @@ evaluateCards(){
 
   let result = "";
 
-    for (let i = 0; i < playerhand.length; i++){
-      let playerhandfilter = playerhand.filter((val, index)=>{
-                return val.face===playerhand[i].face;
-          });
-      
-      if(playerhandfilter.length > 1){
-        this.handlePairs("playerPairs", playerhandfilter);
+    let playerpairsobj = {};
+    playerhand.forEach((hand) => {
+      if (playerpairsobj[hand.face]){
+        playerpairsobj[hand.face] =  playerpairsobj[hand.face] + 1;
       }
-    }
+      else {
+         playerpairsobj[hand.face] = 1;
+      }
+    })
+  
+    let villainpairsobj = {};
+    villainhand.forEach((hand) => {
+      if (villainpairsobj[hand.face]){
+        villainpairsobj[hand.face] =  villainpairsobj[hand.face] + 1;
+      }
+      else {
+         villainpairsobj[hand.face] = 1;
+      }
 
-    for (let i = 0; i < villainhand.length; i++){
+    })
+
+  this.setState(state => {
+      const newState = Object.assign({}, state, {
+          playerpairsobj, villainpairsobj
+      })
+      return newState;
+      })
+    // for (let i = 0; i < playerhand.length; i++){
+    //   let playerhandfilter = playerhand.filter((val, index)=>{
+    //             return val.face===playerhand[i].face;
+    //       });
       
-      let villainhandfilter = villainhand.filter((val, index)=>{
-                return val.face===villainhand[i].face;
-          });
-      if(villainhandfilter.length > 1){
-        this.handlePairs("villainPairs", villainhandfilter);
-      }
-    }
+    //   if(playerhandfilter.length > 1){
+    //     this.handlePairs("playerPairs", playerhandfilter);
+    //   }
+    // }
+
+    // for (let i = 0; i < villainhand.length; i++){
+      
+    //   let villainhandfilter = villainhand.filter((val, index)=>{
+    //             return val.face===villainhand[i].face;
+    //       });
+    //   if(villainhandfilter.length > 1){
+    //     this.handlePairs("villainPairs", villainhandfilter);
+    //   }
+    // }
 
 }
 
@@ -228,14 +267,12 @@ villainPreflopMove(){
 }
 
 villainPostflopMove(){
-  console.log("this.state", this.state)
   let playerAction = this.state.playerAction;
+  let villainPairs = this.handlePairs("villain");
+  let playerPairs = this.handlePairs("player");
   if(this.state.villainPairs[0]){
     var villainpairs = this.state.villainPairs;
-    if (villainpairs.length > 2){
-      this.villainBets(Math.floor(this.props.potsize / 2) + 10)
-    }
-    else if (villainpairs.length === 2){
+    if (villainpairs > 0){
       this.villainBets(Math.floor(this.props.potsize / 2) + 10)
     }
   }
@@ -254,9 +291,9 @@ villainPostflopMove(){
 
 villainTurnMove(){
   let playerAction = this.state.playerAction;
-  if(this.state.villainPairs[0] && this.state.playerAction!=="call"){
-    var villainpairs = this.state.villainPairs;
-    if (villainpairs.length >= 2){
+  let villainPairs = this.handlePairs("villain");
+  if(villainPairs && this.state.playerAction!=="call"){
+    if (villainPairs > 0){
       this.villainBets(Math.floor(this.props.potsize / 1.5))
     }
   }
@@ -280,7 +317,6 @@ checkFlush(cards){
   cards.forEach((card)=>{
     
     cardobj[card.suit] = cardobj[card.suit] + 1;
-    console.log(cardobj[card.suit])
     cardobj[card.suit]===5 ? flushmade = ["flush", card] : null;
     cardobj[card.suit]===4 ? flushdraw = ["flushdraw", card] : null
   })
@@ -325,46 +361,110 @@ calculateWinnersChips(player){
 showDown(){
   let result = "";
   let stage = this.state.stage + 1;
-  console.log("THIS is the State at showdown", this.state);
-        if (this.state.villainPairs.length > this.state.playerPairs.length){
-          if (this.state.villainPairs.length===4){
-          result = "Villain wins with 4 of a kind!!";
-          this.calculateWinnersChips("villain");
-          }
-          else if (this.state.villainPairs.length===3){
-            result = "Villain wins with 3 of a kind!!";
-            this.calculateWinnersChips("villain");
-          }
-          else if (this.state.villainPairs.length===2){
-            result = "Villain wins with a pair!!";
-            this.calculateWinnersChips("villain");
-          }
-        }
-        if (this.state.playerPairs.length > this.state.villainPairs.length){
-          if (this.state.playerPairs.length===4){
-          result = "You win with 4 of a kind!!";
-          this.calculateWinnersChips("user");
-          }
-          else if (this.state.playerPairs.length===3){
-            result = "You win with 3 of a kind!!";
-            this.calculateWinnersChips("user");
-          }
-          else if (this.state.playerPairs.length===2){
-            result = "You win with a pair!!";
-            this.calculateWinnersChips("user");
-          }
-        }
-        else if (this.state.villainPairs.length===this.state.playerPairs.length){
+  let villainPairs = this.handlePairs("villain");
+  let playerPairs = this.handlePairs("player");
+  console.log("PLAYERPAIRS at SHOWDOWN", playerPairs);
+  console.log("VILLAINPAIRS at showdown", villainPairs);
+  let playerFlush = this.checkFlush(this.state.yourcards.concat(this.state.communitycards))
+  if (this.state.villainFlush[0]==="flush"){
+    result = "Villain wins with a flush!";
+    this.calculateWinnersChips("villain");
+  }
+  if (this.state.playerFlush[0]==="flush"){
+    result = "You win with a flush!";
+    this.calculateWinnersChips("user");
+  }
+
+else if (villainPairs > playerPairs){
+  console.log("In the if conditition if Villain has more pairs")
+  if (villainPairs===5){
+  result = "Villain wins with 4 of a kind!!";
+  this.calculateWinnersChips("villain");
+  }
+  else if (villainPairs===4){
+    result = "Villain wins with a Full House!!";
+    this.calculateWinnersChips("villain");
+  }
+  else if (villainPairs===3){
+    result = "Villain wins with three of a kind!!";
+    this.calculateWinnersChips("villain");
+  }
+  else if (villainPairs===2){
+    result = "Villain wins with two pairs!!";
+    this.calculateWinnersChips("villain");
+  }
+    else if (villainPairs===1){
+    result = "Villain wins with a pair!!";
+    this.calculateWinnersChips("villain");
+  }
+}
+else if (playerPairs > villainPairs){
+  console.log("In the if conditition if Player has more pairs")
+  if (playerPairs===5){
+  result = "Player wins with 4 of a kind!!";
+  this.calculateWinnersChips("user");
+  }
+  else if (playerPairs===4){
+    result = "Player wins with a Full House!!";
+    this.calculateWinnersChips("user");
+  }
+  else if (playerPairs===3){
+    result = "Player wins with three of a kind!!";
+    this.calculateWinnersChips("user");
+  }
+  else if (playerPairs===2){
+    result = "Player wins with two pairs!!";
+    this.calculateWinnersChips("user");
+  }
+    else if (playerPairs===1){
+    result = "Player wins with a pair!!";
+    this.calculateWinnersChips("user");
+  }
+}
+else if (playerPairs===villainPairs){
+      if (playerPairs===3){
           if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
-             result = "Villain's higher card wins!!";
+              result = "Villain's higher set wins!!";
             this.calculateWinnersChips("villain");
           }
           else {
-            result = "Player's higher card wins!!";
+            result = "Player's higher set wins!!";
             this.calculateWinnersChips("user");
           }
+    }
+    else if (playerPairs===2){
+        if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
+            result = "Villain's higher two pair wins!!";
+          this.calculateWinnersChips("villain");
         }
-  console.log("RESULT???", result)
+        else {
+          result = "Player's higher two pair wins!!";
+          this.calculateWinnersChips("user");
+        }
+    }
+    else if (playerPairs===1){
+        if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
+            result = "Villain's higher pair wins!!";
+          this.calculateWinnersChips("villain");
+        }
+        else {
+          result = "Player's higher pair wins!!";
+          this.calculateWinnersChips("user");
+        }
+    }
+    else {
+       if (this.state.villaincards[0].value + this.state.villaincards[1].value > this.state.yourcards[0].value + this.state.yourcards[1].value){
+            result = "Villain's higher card wins!!";
+          this.calculateWinnersChips("villain");
+        }
+        else {
+          result = "Player's higher card wins!!";
+          this.calculateWinnersChips("user");
+        }
+
+    }
+}
+
  this.setState({
    stage: stage,
    result : result
@@ -475,6 +575,8 @@ villainFolds(){
             villainPairs : [],
             playerFlush : [],
             villainFlush : [],
+            playerpairsobj: {},
+            villainpairsobj: {},
             yourcards: cards.data.slice(0, 2),
             villaincards: cards.data.slice(2, 4),
             communitycards: cards.data.slice(4, 7),
