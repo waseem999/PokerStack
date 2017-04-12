@@ -19,7 +19,7 @@ return (
                             id="bet"
                             value={props.inputValue}
                             placeholder="Bet Amount" />
-                          </div>
+                        </div>
                     </div>
                         <button type="submit" className="btn-sm btn-custom">Bet</button>
                   </form>

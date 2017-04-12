@@ -57,7 +57,6 @@ let result = 0;
 let pairvalues=[];
   player==="villain" ? pairvalues = Object.values(this.state.villainpairsobj) : 
   pairvalues = Object.values(this.state.playerpairsobj);
-  console.log("THE PAIRVALUES SHOULD be an ARRAY of VALUES!", pairvalues)
     if (pairvalues.indexOf(4) !== -1){
       result=5
     }
@@ -68,9 +67,7 @@ let pairvalues=[];
       result=3
     }
     else if(pairvalues.indexOf(2) !== -1){
-        console.log("IM IN THE pair condition in handlePAIRS!", pairvalues)
       pairvalues.splice(pairvalues.indexOf(2), 1);
-      console.log("NOW I SPLICED!", pairvalues)
       if (pairvalues.indexOf(2) !== -1){
         result=2
       }
@@ -364,8 +361,6 @@ showDown(){
   let stage = this.state.stage + 1;
   let villainPairs = this.handlePairs("villain");
   let playerPairs = this.handlePairs("player");
-  console.log("PLAYERPAIRS at SHOWDOWN", playerPairs);
-  console.log("VILLAINPAIRS at showdown", villainPairs);
   let playerFlush = this.checkFlush(this.state.yourcards.concat(this.state.communitycards))
   if (this.state.villainFlush[0]==="flush"){
     result = "Villain wins with a flush!";
@@ -377,7 +372,6 @@ showDown(){
   }
 
 else if (villainPairs > playerPairs){
-  console.log("In the if conditition if Villain has more pairs")
   if (villainPairs===5){
   result = "Villain wins with 4 of a kind!!";
   this.calculateWinnersChips("villain");
@@ -400,7 +394,6 @@ else if (villainPairs > playerPairs){
   }
 }
 else if (playerPairs > villainPairs){
-  console.log("In the if conditition if Player has more pairs")
   if (playerPairs===5){
   result = "Player wins with 4 of a kind!!";
   this.calculateWinnersChips("user");
@@ -509,7 +502,6 @@ villainCalls(){
 }
 
 villainChecks(){
-  console.log("VILLAIN CHECKS STATE", this.state)
   let stage = this.state.stage + 1;
    this.setState(state => {
           const newState = Object.assign({}, state, {
