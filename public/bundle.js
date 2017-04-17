@@ -31697,9 +31697,9 @@
 	    key: 'villainPreflopMove',
 	    value: function villainPreflopMove() {
 	
-	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 2) {
+	      if (this.state.villaincards[0].value === this.state.villaincards[1].value || this.state.villaincards[0].value + this.state.villaincards[1].value > 18) {
 	        this.villainBets(25);
-	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction === "bet") {
+	      } else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 14 && this.state.playerAction === "bet") {
 	        this.villainCalls();
 	      } else if (this.state.playerAction === "bet") {
 	        this.villainFolds();
@@ -32290,7 +32290,7 @@
 	exports.default = function (props) {
 	    return _react2.default.createElement(
 	        "div",
-	        { style: { backgroundColor: "#9ACD32", fontSize: "1.1em" } },
+	        { className: "row", style: { backgroundColor: "#9ACD32", fontSize: "1.1em" } },
 	        _react2.default.createElement(
 	            "table",
 	            { width: "700" },

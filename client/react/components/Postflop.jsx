@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function (props) {
 return (
-    <div style={{backgroundColor : "#9ACD32", fontSize: "1.1em"}}>
+    <div className={"row"} style={{backgroundColor : "#9ACD32", fontSize: "1.1em"}}>
         <table width="700">
             <thead>
                 <tr><strong>Community Cards</strong></tr>

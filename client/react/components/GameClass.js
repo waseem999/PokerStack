@@ -248,10 +248,10 @@ evaluateCards(){
 
 villainPreflopMove(){
 
-     if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 2){
+     if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 18){
         this.villainBets(25)
       }
-      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction==="bet"){
+      else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 14 && this.state.playerAction==="bet"){
         this.villainCalls()
       }
       
