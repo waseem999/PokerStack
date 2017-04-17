@@ -91,7 +91,8 @@ handleCheck(e) {
           playerhasActed: true,
           playerAction: "call",
           villainAction: false,
-          stage: stage
+          stage: stage,
+          currentBet: 0
       })
       return newState;
       })
@@ -247,7 +248,7 @@ evaluateCards(){
 
 villainPreflopMove(){
 
-     if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 22){
+     if((this.state.villaincards[0].value === this.state.villaincards[1].value) || this.state.villaincards[0].value + this.state.villaincards[1].value > 2){
         this.villainBets(25)
       }
       else if (this.state.villaincards[0].value + this.state.villaincards[1].value > 16 && this.state.playerAction==="bet"){
@@ -348,10 +349,10 @@ villainRiverMove(){
 
 calculateWinnersChips(player){
   if (player==="user"){
-    this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2))
+    this.props.modifyUserChips(this.props.chips + (this.props.potsize))
   }
   else {
-    this.props.modifyVillainChips(this.props.villainchips + (this.props.potsize * 2))
+    this.props.modifyVillainChips(this.props.villainchips + (this.props.potsize))
   }
     this.props.logBetAmount(0)
 }
@@ -517,6 +518,8 @@ villainChecks(){
 
 villainBets(bet){
   this.props.logBetAmount(this.props.potsize + bet);
+  console.log("BET", bet);
+  console.log("CURRENTBET", this.state.currentBet)
   let reducedbet = this.props.villainchips - bet - this.state.currentBet;
   this.props.modifyVillainChips(reducedbet);
   this.setState(state => {
@@ -540,7 +543,7 @@ villainFolds(){
           })
           return newState;
         })
-  this.props.modifyUserChips(this.props.chips + (this.props.potsize * 2));
+  this.props.modifyUserChips(this.props.chips + (this.props.potsize));
   this.props.logBetAmount(0);
 }
 

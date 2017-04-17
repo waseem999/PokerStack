@@ -4,9 +4,9 @@
   "description": "A poker game",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js && webpack -d --watch",
+    "start": "nodemon app.js",
     "dev": "webpack -d --watch",
-    "build": "webpack -p",
+    "build": "webpack -p && webpack -w",
     "test": "mocha tests tests/client/helpers/globalTestVariables.js --recursive"
   },
   "keywords": [],

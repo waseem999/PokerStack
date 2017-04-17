@@ -2,7 +2,6 @@ import React from 'react';
 
 
 export default function (props) {
-console.log("PROPS!", props)
 return (
     <div style={{backgroundColor : "#9ACD32", fontSize: "1.1em"}}>
         <table width="700">
