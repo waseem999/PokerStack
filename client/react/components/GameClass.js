@@ -618,6 +618,7 @@ villainFolds(){
           villaincards={this.state.villaincards}
           result={this.state.result}
         />
+	    
         {this.state.stage > 0 ? <Postflop handleChange={this.handleChange}
           handleBet={this.handleBet}
           dealCards={this.dealCards}
